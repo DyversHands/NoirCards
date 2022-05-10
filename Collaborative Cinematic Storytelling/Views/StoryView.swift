@@ -11,7 +11,6 @@ let imageType = "public.utf8-plain-text"
 
 struct StoryView: View {
     
-    
     @ObservedObject var viewModel: StoryViewModel
     @State var dropdelegate : MyDropDelegate? = nil
     
@@ -34,16 +33,17 @@ struct StoryView: View {
                 
                 TopCardsView(viewModel: viewModel)
                 Color.black.frame(height: 3)
-                DropView(newImage: viewModel.droppedImages.last)
+                DropView(viewModel: viewModel)
                     .onDrop(of: [imageType], delegate:  MyDropDelegate(dropImages: $viewModel.droppedImages, stackImages: $viewModel.stackImages))
                 Spacer(minLength: 100)
             }
             Spacer(minLength: 8)
         }
+        .onAppear {
+            //CoreDataManager.shared.deleteAllData(placement: Placement.dropped.rawValue)
+        }
     }
 }
-
-
 
 struct StoryView_Previews: PreviewProvider {
     static var previews: some View {
@@ -82,15 +82,24 @@ struct TopCardsView : View{
 }
 
 struct DropView: UIViewRepresentable {
-    var newImage: StoryModel?
+    //var newImage: StoryModel?
+    @ObservedObject var viewModel: StoryViewModel
     func makeUIView(context: Context) -> UIView {
         UIView()
     }
     
     func updateUIView(_ uiView: UIView, context: Context) {
-        if let newImage = newImage {
-            print("Location \(newImage.location)")
-            let storyV = StoryCard(model: newImage, frame: .init(x: newImage.location.x - 87.5, y: newImage.location.y - 62.5, width: 175, height: 125))
+        uiView.subviews.filter({type(of: $0) == StoryCard.self}).forEach { subV in
+            subV.removeFromSuperview()
+        }
+        for image in viewModel.droppedImages{
+            let storyV = StoryCard(model:image, frame: image.frame)
+            storyV.viewUpdated = { storyModel in
+                if let index = viewModel.droppedImages.firstIndex(where: {$0.id
+                    == storyModel.id }){
+                    viewModel.droppedImages[index] = storyModel
+                }
+            }
             uiView.addSubview(storyV)
         }
     }
@@ -106,7 +115,7 @@ struct MyDropDelegate: DropDelegate {
                     if let imgData = data as? Data {
                         if let imgName = String(data: imgData, encoding: .utf8) {
                             stackImages.removeAll(where: {$0.imageName == imgName})
-                            dropImages.append(StoryModel(imageName: imgName, location: info.location))
+                            dropImages.append(StoryModel(imageName: imgName, frame: CGRect(x: info.location.x, y: info.location.y, width: 225, height: 175)))
                         }
                     }
                 }
@@ -117,7 +126,3 @@ struct MyDropDelegate: DropDelegate {
     
     
 }
-
-
-
-

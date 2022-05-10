@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		AB06F0042827ACB2005610FE /* Core Data Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB06F0032827ACB2005610FE /* Core Data Manager.swift */; };
+		AB06F00828284967005610FE /* CDMarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = AB06F00728284967005610FE /* CDMarkdownKit */; };
+		AB06F00B28284B50005610FE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB06F00A28284B50005610FE /* Extensions.swift */; };
+		AB06F00D28286295005610FE /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB06F00C28286295005610FE /* View.xib */; };
 		AB12060E28221B4900990332 /* StoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB12060D28221B4900990332 /* StoryViewModel.swift */; };
 		AB12061128221C8400990332 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB12061028221C8400990332 /* Assets.xcassets */; };
 		AB5506102817B24400E6CCB4 /* Collaborative_Cinematic_StorytellingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB55060F2817B24400E6CCB4 /* Collaborative_Cinematic_StorytellingApp.swift */; };
@@ -24,6 +27,8 @@
 
 /* Begin PBXFileReference section */
 		AB06F0032827ACB2005610FE /* Core Data Manager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Core Data Manager.swift"; sourceTree = "<group>"; };
+		AB06F00A28284B50005610FE /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		AB06F00C28286295005610FE /* View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 		AB12060D28221B4900990332 /* StoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryViewModel.swift; sourceTree = "<group>"; };
 		AB12061028221C8400990332 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AB55060C2817B24400E6CCB4 /* Collaborative Cinematic Storytelling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Collaborative Cinematic Storytelling.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB06F00828284967005610FE /* CDMarkdownKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +62,14 @@
 				AB06F0032827ACB2005610FE /* Core Data Manager.swift */,
 			);
 			path = Manager;
+			sourceTree = "<group>";
+		};
+		AB06F00928284B42005610FE /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				AB06F00A28284B50005610FE /* Extensions.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		AB5506032817B24400E6CCB4 = {
@@ -77,6 +91,7 @@
 		AB55060E2817B24400E6CCB4 /* Collaborative Cinematic Storytelling */ = {
 			isa = PBXGroup;
 			children = (
+				AB06F00928284B42005610FE /* Extension */,
 				AB06F0052827ACBE005610FE /* Manager */,
 				AB851F0F2822D39300958D24 /* Model */,
 				AB5506252817B2A900E6CCB4 /* View Model */,
@@ -85,6 +100,7 @@
 				AB55060F2817B24400E6CCB4 /* Collaborative_Cinematic_StorytellingApp.swift */,
 				AB5506152817B24500E6CCB4 /* Preview Content */,
 				AB12061028221C8400990332 /* Assets.xcassets */,
+				AB06F00C28286295005610FE /* View.xib */,
 			);
 			path = "Collaborative Cinematic Storytelling";
 			sourceTree = "<group>";
@@ -158,6 +174,9 @@
 			dependencies = (
 			);
 			name = "Collaborative Cinematic Storytelling";
+			packageProductDependencies = (
+				AB06F00728284967005610FE /* CDMarkdownKit */,
+			);
 			productName = "Collaborative Cinematic Storytelling";
 			productReference = AB55060C2817B24400E6CCB4 /* Collaborative Cinematic Storytelling.app */;
 			productType = "com.apple.product-type.application";
@@ -186,6 +205,9 @@
 				Base,
 			);
 			mainGroup = AB5506032817B24400E6CCB4;
+			packageReferences = (
+				AB06F00628284967005610FE /* XCRemoteSwiftPackageReference "CDMarkdownKit" */,
+			);
 			productRefGroup = AB55060D2817B24400E6CCB4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -200,6 +222,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB06F00D28286295005610FE /* View.xib in Resources */,
 				AB5506172817B24500E6CCB4 /* Preview Assets.xcassets in Resources */,
 				AB12061128221C8400990332 /* Assets.xcassets in Resources */,
 				AB5506142817B24500E6CCB4 /* Assets.xcassets in Resources */,
@@ -222,6 +245,7 @@
 				AB851F0B2822D2A100958D24 /* Empty Card.swift in Sources */,
 				AB5506122817B24400E6CCB4 /* ContentView.swift in Sources */,
 				AB5506102817B24400E6CCB4 /* Collaborative_Cinematic_StorytellingApp.swift in Sources */,
+				AB06F00B28284B50005610FE /* Extensions.swift in Sources */,
 				AB55061C2817B24500E6CCB4 /* Collaborative_Cinematic_Storytelling.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,6 +449,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AB06F00628284967005610FE /* XCRemoteSwiftPackageReference "CDMarkdownKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/chrisdhaan/CDMarkdownKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AB06F00728284967005610FE /* CDMarkdownKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB06F00628284967005610FE /* XCRemoteSwiftPackageReference "CDMarkdownKit" */;
+			productName = CDMarkdownKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		AB55061A2817B24500E6CCB4 /* Collaborative_Cinematic_Storytelling.xcdatamodeld */ = {

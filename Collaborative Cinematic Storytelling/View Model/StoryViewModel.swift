@@ -35,7 +35,7 @@ public class StoryViewModel: ObservableObject {
         images.removeAll()
         for i in 1...272{
             let imgNum = i < 10 ? "00\(i)" : i < 100 ?  "0\(i)" : "\(i)"
-            images.append(StoryModel(imageName: "Noir Sample Cards.\(imgNum)", location: .zero))
+            images.append(StoryModel(imageName: "Noir Sample Cards.\(imgNum)"))
         }
         
     }

@@ -8,24 +8,27 @@
 import Foundation
 import UIKit
 import SwiftUI
+import CDMarkdownKit
 
 class StoryCard: UIView {
+    var model : StoryModel! = nil{
+        didSet{
+            updateModel()
+        }
+    }
     
-    var image : UIImage
+    var vStack = UIStackView()
+    var hStack = UIStackView()
     var imgView = UIImageView()
     var textView = UITextView()
     var button = UIButton()
     let container = UIView()
     let textLbl = UILabel()
     
-    let superViewZoomFrame = CGRect(x: 0, y: 0, width: 750, height: 500)
-    let superViewNormalFrame = CGRect(x: 0, y: 0, width: 175, height: 175)
-    
-    let subviewZoomFrame = CGRect(x: 0, y: 0, width: 700, height: 500)
-    let subviewNormalFrame = CGRect(x: 0, y: 0, width: 175, height: 125)
-    
     private var showingBack = false
     private var isZoomedIn = false
+    
+    var viewUpdated : ((StoryModel) -> Void)? = nil
     
     var cornerRadius : CGFloat = 12 {
         didSet{
@@ -37,7 +40,7 @@ class StoryCard: UIView {
     
     
     init(model : StoryModel, frame: CGRect) {
-        self.image = model.image
+        self.model = model
         super.init(frame: frame)
         configureView(frame: frame)
     }
@@ -45,37 +48,50 @@ class StoryCard: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    override func willMove(toSuperview newSuperview: UIView?) {
+        super.willMove(toSuperview: newSuperview)
+        //self.layer.masksToBounds = true
+        
+    }
+    override func didMoveToSuperview() {
+        if self.superview == nil{
+            return
+        }
+        self.anchor(top: self.superview!.topAnchor, left: self.superview!.leftAnchor,  paddingTop: model.frame.minY, paddingLeft: model.frame.minX, width: model.frame.width, height: model.frame.height)
+        container.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor , right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 50 , paddingRight: 50)
+        imgView.addConstraintsToFillView(container)
+        textView.addConstraintsToFillView(container)
+        textLbl.anchor(top: container.bottomAnchor, left: container.leftAnchor, bottom: bottomAnchor, right: container.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8, height: 34)
+        button.anchor(top: container.topAnchor, left: container.rightAnchor,  paddingTop: 8, paddingLeft: 8)
+    }
+    
     
     func configureView(frame : CGRect){
         
         self.backgroundColor = .clear
         
         textLbl.numberOfLines = 0
-        textLbl.frame = CGRect(x: 0, y: 130, width: frame.width, height: 0)
+        textLbl.attributedText = CDMarkdownParser().parse(model.text)
         
-        imgView.image = image
-        imgView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+        imgView.image = model.image
         imgView.layer.masksToBounds = true
         
-        textView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
-        //textView.text = "This is textview"
         textView.isScrollEnabled = false
         textView.isSelectable = false
-        //textView.isUserInteractionEnabled = false
-        textView.isHidden = true
+        textView.alpha = 0
         textView.isEditable = true
         textView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        textView.font = UIFont.systemFont(ofSize: 60)
         
-        button.isHidden = true
+        button.alpha = model.frame.width < 750 ? 0 : 1
         button.tintColor = .black
+        button.setTitle("Edit", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(editText), for: .touchDown)
         
         container.layer.masksToBounds = true
         container.layer.borderWidth = 1
         container.layer.borderColor = UIColor.black.cgColor
-        container.frame = subviewNormalFrame
-        
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch))
@@ -89,10 +105,9 @@ class StoryCard: UIView {
         container.addSubview(imgView)
         self.addGestureRecognizer(singleTap)
         self.addGestureRecognizer(panGesture)
-        self.addGestureRecognizer(pinchGesture)
+        //self.addGestureRecognizer(pinchGesture)
         
-       
-        self.cornerRadius = 12
+        self.cornerRadius = (model.frame.height - 50) * 0.068
     }
     
     @objc func handlePan(sender: UIPanGestureRecognizer){
@@ -106,7 +121,13 @@ class StoryCard: UIView {
             self.center = CGPoint(x: x, y:y )
             sender.setTranslation(CGPoint.zero, in: self.superview)
             print("translated Point",self.center.x + translation.x  , self.center.y + translation.y)
+            
+            if sender.state == .ended{
+                self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
+            }
         }
+        
+        
     }
     
     @objc func handlePinch(sender: UIPinchGestureRecognizer){
@@ -119,7 +140,7 @@ class StoryCard: UIView {
             UIView.animate(withDuration: 1) { [self] in
                 self.cornerRadius =  scale * 12
                 self.frame = CGRect(x: frame.minX, y: frame.minY, width: width, height: height)
-                imgView.frame = CGRect(x: 0, y: 0, width: width, height: height)
+                
             }
             self.textView.font = UIFont.systemFont(ofSize: 17 * scale)
             
@@ -129,10 +150,10 @@ class StoryCard: UIView {
     
     @objc func handleTap(sender : UITapGestureRecognizer){
         
-        if !isZoomedIn{
+        if self.frame.height == 175{
             button.setTitle("Edit", for: .normal)
             self.cornerRadius =  48
-            self.textView.font = UIFont.systemFont(ofSize: 60)
+            
             zoomIn()
             isZoomedIn = true
         }
@@ -155,70 +176,55 @@ class StoryCard: UIView {
         else if button.titleLabel?.text == "Done"{
             textView.resignFirstResponder()
             textView.isEditable = false
-            textLbl.text = textView.text
             textLbl.sizeToFit()
-            textLbl.frame = CGRect(x: 0, y: 130, width: frame.width, height: textLbl.frame.height > 50 ? 50 : textLbl.frame.height )
             button.setTitle("Edit", for: .normal)
+            self.model.text = self.textView.text
         }
         
         
         UIView.transition(with: self, duration: 1, options: [.transitionFlipFromRight , .showHideTransitionViews]) {
             if self.imgView.alpha == 0{
-                self.textView.isHidden = true
                 self.imgView.alpha = 1
                 self.textView.alpha = 0
                 
             }
             else{
-                self.textView.isHidden = false
-                self.imgView.alpha = 0
                 self.textView.alpha = 1
+                self.imgView.alpha = 0
                 
             }
         } completion: { status in
-            if !self.textView.isHidden{
-                UIView.animate(withDuration: 1) { [self] in
-                    self.frame = CGRect(x: frame.minX, y: frame.minY, width: 745 , height: 500)
-                    imgView.frame = CGRect(x: 0, y: 0, width: 700, height: 500)
-                    textView.frame = CGRect(x: 0, y: 0, width: 700, height: 500)
-                    container.frame = CGRect(x: 0, y: 0, width: 700, height: 500)
-                    button.frame = CGRect(x: 705, y: 8, width: 45, height: 30)
-                    button.isHidden =  false
-                }
-            }
+            
         }
     }
     
     func zoomIn(){
+        self.cornerRadius = 48
+        textLbl.alpha = 0
+        button.alpha = 1
         UIView.animate(withDuration: 1) { [self] in
-            self.frame = CGRect(x: frame.minX, y: frame.minY, width: 750, height: 500)
-            self.cornerRadius = 48
-            imgView.frame = subviewZoomFrame
-            textView.frame = subviewZoomFrame
-            container.frame = subviewZoomFrame
-            button.frame = CGRect(x: 705, y: 8, width: 45, height: 30)
-            button.isHidden =  false
-            
-            
+            self.updateHeightWidht(newHeight: 550, newWidth: 800)
         } completion: {[self]  status in
-            textLbl.isHidden = true
+            
+            model.frame = self.frame
         }
         
     }
     
     func zoomOut(){
+        self.cornerRadius = 12
+        button.alpha =  0
         UIView.animate(withDuration: 1) { [self] in
-            self.frame = CGRect(x: frame.minX, y: frame.minY, width: 175, height: 175)
-            imgView.frame = subviewNormalFrame
-            textView.frame = subviewNormalFrame
-            container.frame = subviewNormalFrame
-            //button.frame = CGRect(x: 705, y: 8, width: 45, height: 30)
-            self.cornerRadius = 12
-            button.isHidden =  true
-            textLbl.isHidden = false
+            self.updateHeightWidht(newHeight: 175, newWidth: 225)
+            
         } completion: {[self]  status in
-            textLbl.isHidden = false
+            textLbl.alpha = 1
+            model.frame = self.frame
         }
     }
     
+    
+    func updateModel(){
+        viewUpdated?(self.model)
+    }
 }

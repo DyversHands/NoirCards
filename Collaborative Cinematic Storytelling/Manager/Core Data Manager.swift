@@ -61,8 +61,10 @@ class CoreDataManager{
         let mediaData = NSManagedObject(entity: entity!, insertInto: context)
         mediaData.setValue(model.id, forKey: "id")
         mediaData.setValue(model.imageName, forKey: "imageName")
-        mediaData.setValue(model.location.x, forKey: "x")
-        mediaData.setValue(model.location.y, forKey: "y")
+        mediaData.setValue(model.frame.minX, forKey: "x")
+        mediaData.setValue(model.frame.minY, forKey: "y")
+        mediaData.setValue(model.frame.height, forKey: "height")
+        mediaData.setValue(model.frame.width, forKey: "width")
         mediaData.setValue(model.text, forKey: "text")
         mediaData.setValue(placement, forKey: "placement")
         
@@ -86,8 +88,9 @@ class CoreDataManager{
             guard let text = data.value(forKey: "text") as? String else {continue}
             guard let x = data.value(forKey: "x") as? Double else {continue}
             guard let y = data.value(forKey: "y") as? Double else {continue}
-            
-            let model = StoryModel(id: id, imageName: name, location: CGPoint(x: x, y: y), text: text)
+            guard let height = data.value(forKey: "height") as? Double else {continue}
+            guard let width = data.value(forKey: "width") as? Double else {continue}
+            let model = StoryModel(id: id, imageName: name, frame: CGRect(x: x, y: y, width: width, height: height), text: text)
             mediaArr.append(model)
             
         }
