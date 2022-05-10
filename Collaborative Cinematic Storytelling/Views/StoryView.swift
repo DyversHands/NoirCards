@@ -115,7 +115,7 @@ struct MyDropDelegate: DropDelegate {
                     if let imgData = data as? Data {
                         if let imgName = String(data: imgData, encoding: .utf8) {
                             stackImages.removeAll(where: {$0.imageName == imgName})
-                            dropImages.append(StoryModel(imageName: imgName, frame: CGRect(x: info.location.x, y: info.location.y, width: 225, height: 175)))
+                            dropImages.append(StoryModel(imageName: imgName, frame: CGRect(x: info.location.x, y: info.location.y, width: cardWidth + 50, height: cardHeight + 50)))
                         }
                     }
                 }

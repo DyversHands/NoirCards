@@ -14,7 +14,7 @@ struct EmptyCard : View{
                 .strokeBorder(.gray)
                 .foregroundColor(.clear)
                 .background(Color.clear)
-                .frame(width: 175, height: 125)
+                .frame(width: cardWidth, height: cardHeight)
         }
     }
 }

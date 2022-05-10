@@ -16,7 +16,7 @@ struct StoryModel : Hashable{
             return UIImage(named: imageName)!
         }
     }
-    var frame : CGRect = CGRect(x: 0, y: 0, width: 225, height: 175)
+    var frame : CGRect = CGRect(x: 0, y: 0, width: cardWidth, height: cardHeight)
     var text : String = ""
     
     func hash(into hasher: inout Hasher) {

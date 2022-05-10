@@ -15,7 +15,6 @@
 		AB12061128221C8400990332 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB12061028221C8400990332 /* Assets.xcassets */; };
 		AB5506102817B24400E6CCB4 /* Collaborative_Cinematic_StorytellingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB55060F2817B24400E6CCB4 /* Collaborative_Cinematic_StorytellingApp.swift */; };
 		AB5506122817B24400E6CCB4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5506112817B24400E6CCB4 /* ContentView.swift */; };
-		AB5506142817B24500E6CCB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB5506132817B24500E6CCB4 /* Assets.xcassets */; };
 		AB5506172817B24500E6CCB4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB5506162817B24500E6CCB4 /* Preview Assets.xcassets */; };
 		AB55061C2817B24500E6CCB4 /* Collaborative_Cinematic_Storytelling.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AB55061A2817B24500E6CCB4 /* Collaborative_Cinematic_Storytelling.xcdatamodeld */; };
 		AB5506232817B29800E6CCB4 /* StoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5506222817B29800E6CCB4 /* StoryView.swift */; };
@@ -34,7 +33,6 @@
 		AB55060C2817B24400E6CCB4 /* Collaborative Cinematic Storytelling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Collaborative Cinematic Storytelling.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB55060F2817B24400E6CCB4 /* Collaborative_Cinematic_StorytellingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collaborative_Cinematic_StorytellingApp.swift; sourceTree = "<group>"; };
 		AB5506112817B24400E6CCB4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		AB5506132817B24500E6CCB4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AB5506162817B24500E6CCB4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AB55061B2817B24500E6CCB4 /* Collaborative_Cinematic_Storytelling.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Collaborative_Cinematic_Storytelling.xcdatamodel; sourceTree = "<group>"; };
 		AB5506222817B29800E6CCB4 /* StoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryView.swift; sourceTree = "<group>"; };
@@ -99,7 +97,6 @@
 				AB5506262817B2B600E6CCB4 /* Other Files */,
 				AB55060F2817B24400E6CCB4 /* Collaborative_Cinematic_StorytellingApp.swift */,
 				AB5506152817B24500E6CCB4 /* Preview Content */,
-				AB12061028221C8400990332 /* Assets.xcassets */,
 				AB06F00C28286295005610FE /* View.xib */,
 			);
 			path = "Collaborative Cinematic Storytelling";
@@ -135,7 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				AB55061A2817B24500E6CCB4 /* Collaborative_Cinematic_Storytelling.xcdatamodeld */,
-				AB5506132817B24500E6CCB4 /* Assets.xcassets */,
+				AB12061028221C8400990332 /* Assets.xcassets */,
 			);
 			path = "Other Files";
 			sourceTree = "<group>";
@@ -225,7 +222,6 @@
 				AB06F00D28286295005610FE /* View.xib in Resources */,
 				AB5506172817B24500E6CCB4 /* Preview Assets.xcassets in Resources */,
 				AB12061128221C8400990332 /* Assets.xcassets in Resources */,
-				AB5506142817B24500E6CCB4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

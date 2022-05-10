@@ -8,6 +8,10 @@
 import SwiftUI
 import CoreData
 
+
+let cardHeight : CGFloat = 110
+let cardWidth : CGFloat = 154
+
 struct ContentView: View {
 
     var body: some View {

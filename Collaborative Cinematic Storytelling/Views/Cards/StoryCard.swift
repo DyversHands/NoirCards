@@ -26,7 +26,32 @@ class StoryCard: UIView {
     let textLbl = UILabel()
     
     private var showingBack = false
-    private var isZoomedIn = false
+    
+    private var zoomedHeight : CGFloat{
+        get{
+            return cardHeight * 5 + 50
+        }
+    }
+    
+    private var zoomedWidth : CGFloat{
+        get{
+            return cardWidth * 5 + 50
+        }
+    }
+    
+    
+    private var normaHeight : CGFloat{
+        get{
+            return cardHeight + 50
+        }
+    }
+    
+    private var normalWidth : CGFloat{
+        get{
+            return cardWidth + 50
+        }
+    }
+    
     
     var viewUpdated : ((StoryModel) -> Void)? = nil
     
@@ -57,7 +82,7 @@ class StoryCard: UIView {
         if self.superview == nil{
             return
         }
-        self.anchor(top: self.superview!.topAnchor, left: self.superview!.leftAnchor,  paddingTop: model.frame.minY, paddingLeft: model.frame.minX, width: model.frame.width, height: model.frame.height)
+        //self.anchor(top: self.superview!.topAnchor, left: self.superview!.leftAnchor,  paddingTop: model.frame.minY, paddingLeft: model.frame.minX, width: model.frame.width, height: model.frame.height)
         container.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor , right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 50 , paddingRight: 50)
         imgView.addConstraintsToFillView(container)
         textView.addConstraintsToFillView(container)
@@ -80,7 +105,7 @@ class StoryCard: UIView {
         textView.isSelectable = false
         textView.alpha = 0
         textView.isEditable = true
-        textView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        textView.contentInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
         textView.font = UIFont.systemFont(ofSize: 60)
         
         button.alpha = model.frame.width < 750 ? 0 : 1
@@ -107,7 +132,10 @@ class StoryCard: UIView {
         self.addGestureRecognizer(panGesture)
         //self.addGestureRecognizer(pinchGesture)
         
-        self.cornerRadius = (model.frame.height - 50) * 0.068
+        self.cornerRadius = model.frame.height ==  zoomedHeight ? 48 : 12
+        if  model.frame.height ==  zoomedHeight {
+            self.superview?.bringSubviewToFront(self)
+        }
     }
     
     @objc func handlePan(sender: UIPanGestureRecognizer){
@@ -150,18 +178,14 @@ class StoryCard: UIView {
     
     @objc func handleTap(sender : UITapGestureRecognizer){
         
-        if self.frame.height == 175{
+        if self.frame.height == normaHeight{
             button.setTitle("Edit", for: .normal)
             self.cornerRadius =  48
-            
             zoomIn()
-            isZoomedIn = true
         }
         else{
             self.cornerRadius =  12
-            self.textView.font = UIFont.systemFont(ofSize: 17)
             zoomOut()
-            isZoomedIn = false
         }
         
         
@@ -199,27 +223,36 @@ class StoryCard: UIView {
     }
     
     func zoomIn(){
-        self.cornerRadius = 48
+
+        self.superview?.bringSubviewToFront(self)
         textLbl.alpha = 0
         button.alpha = 1
+        
+        let newX = frame.minX - (zoomedWidth - normalWidth)/2 < 0 ? 0 : frame.minX - (zoomedWidth - normalWidth)/2
+        
+        let newY = frame.minX - (zoomedHeight - normaHeight)/2 < 0 ? 0 : frame.minY - (zoomedHeight - normaHeight)/2
+        
         UIView.animate(withDuration: 1) { [self] in
-            self.updateHeightWidht(newHeight: 550, newWidth: 800)
+            self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
+            self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
         } completion: {[self]  status in
-            
-            model.frame = self.frame
+            self.cornerRadius = 48
+            //model.frame = self.frame
         }
         
     }
     
     func zoomOut(){
-        self.cornerRadius = 12
+        
         button.alpha =  0
         UIView.animate(withDuration: 1) { [self] in
-            self.updateHeightWidht(newHeight: 175, newWidth: 225)
+            self.frame = CGRect(x: frame.minX + (zoomedWidth - normalWidth)/2, y: frame.minY + (zoomedHeight -  normaHeight)/2, width: normalWidth, height: normaHeight)
+            self.updateHeightWidht(newHeight: normaHeight, newWidth: normalWidth)
             
         } completion: {[self]  status in
             textLbl.alpha = 1
-            model.frame = self.frame
+            self.cornerRadius = 12
+            //model.frame = self.frame
         }
     }
     

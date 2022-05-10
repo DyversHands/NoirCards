@@ -15,7 +15,7 @@ struct TopStoryCard : View{
             Image(uiImage: image)
                 .resizable()
                 .cornerRadius(12)
-                .frame(width: 175, height: 125)
+                .frame(width: cardWidth, height: cardHeight)
         }
     }
     
