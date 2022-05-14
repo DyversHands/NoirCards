@@ -52,6 +52,10 @@ class StoryCard: UIView {
         }
     }
     
+    var didChangedInitialY = false
+    var didChangedInitialX = false
+    var initialX: CGFloat = 0
+    var initialY: CGFloat = 0
     
     var viewUpdated : ((StoryModel) -> Void)? = nil
     
@@ -88,6 +92,8 @@ class StoryCard: UIView {
         textView.addConstraintsToFillView(container)
         textLbl.anchor(top: container.bottomAnchor, left: container.leftAnchor, bottom: bottomAnchor, right: container.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8, height: 34)
         button.anchor(top: container.topAnchor, left: container.rightAnchor,  paddingTop: 8, paddingLeft: 8)
+        initialX = self.frame.minX
+        initialY = self.frame.minY
     }
     
     
@@ -107,6 +113,7 @@ class StoryCard: UIView {
         textView.isEditable = true
         textView.contentInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
         textView.font = UIFont.systemFont(ofSize: 60)
+        textView.text = model.text
         
         button.alpha = model.frame.width < 750 ? 0 : 1
         button.tintColor = .black
@@ -148,7 +155,7 @@ class StoryCard: UIView {
         if x >= frame.width/2 && y >= frame.height/2{
             self.center = CGPoint(x: x, y:y )
             sender.setTranslation(CGPoint.zero, in: self.superview)
-            print("translated Point",self.center.x + translation.x  , self.center.y + translation.y)
+            print("translated Point",frame.minX  , frame.minY)
             
             if sender.state == .ended{
                 self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
@@ -228,9 +235,39 @@ class StoryCard: UIView {
         textLbl.alpha = 0
         button.alpha = 1
         
-        let newX = frame.minX - (zoomedWidth - normalWidth)/2 < 0 ? 0 : frame.minX - (zoomedWidth - normalWidth)/2
+        var newX = frame.minX - (zoomedWidth - normalWidth)/2 < 0 ? 0 : frame.minX - (zoomedWidth - normalWidth)/2
         
-        let newY = frame.minX - (zoomedHeight - normaHeight)/2 < 0 ? 0 : frame.minY - (zoomedHeight - normaHeight)/2
+        var newY = frame.minX - (zoomedHeight - normaHeight)/2 < 0 ? 0 : frame.minY - (zoomedHeight - normaHeight)/2
+        
+        if newY <= 0 { // when newY is goint offset from top
+            newY = self.frame.minY
+            
+        }
+        /*// to prevent offset from bottom
+        else if newY + zoomedHeight > (self.superview!.frame.maxY) {
+            newY = self.frame.minY - zoomedWidth/2
+            didChangedInitialY = true
+        }
+         */
+
+        else { // when card is at bottom or center no change in newY
+            didChangedInitialY = true
+        }
+
+        
+        // Checking For X Offsets
+        if newX <= 0 { // when newX is goint off left from screen
+            newX = self.frame.minX
+        }
+        // when card total width is going off right from screen
+        else if newX + zoomedWidth > (self.superview!.frame.maxX) {
+            let editBtnOffset = self.frame.maxX - self.superview!.frame.maxX
+            newX = self.frame.minX - zoomedWidth + normalWidth - editBtnOffset
+            didChangedInitialX = true
+        }
+        else { // when card is at center no change in newX
+            didChangedInitialX = true
+        }
         
         UIView.animate(withDuration: 1) { [self] in
             self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
@@ -244,9 +281,19 @@ class StoryCard: UIView {
     
     func zoomOut(){
         
+        var newY = self.frame.minY
+        var newX = self.frame.minX
+        
+        if didChangedInitialY {
+            newY = initialY
+        }
+        if didChangedInitialX {
+            newX = initialX
+        }
+        
         button.alpha =  0
         UIView.animate(withDuration: 1) { [self] in
-            self.frame = CGRect(x: frame.minX + (zoomedWidth - normalWidth)/2, y: frame.minY + (zoomedHeight -  normaHeight)/2, width: normalWidth, height: normaHeight)
+            self.frame = CGRect(x: newX, y: newY, width: normalWidth, height: normaHeight)
             self.updateHeightWidht(newHeight: normaHeight, newWidth: normalWidth)
             
         } completion: {[self]  status in
