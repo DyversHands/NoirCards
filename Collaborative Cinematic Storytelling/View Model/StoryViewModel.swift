@@ -52,6 +52,17 @@ public class StoryViewModel: ObservableObject {
         print(stackImages)
     }
     
+    func pickImageFromID(imgName: String) {
+        if stackImages.count > 6{
+            stackImages.removeFirst()
+        }
+        
+        if let img = images.first(where: {$0.imageName == imgName}){
+            stackImages.append(img)
+        }
+
+    }
+    
     func updateStackImages(){
         CoreDataManager.shared.deleteAllData(placement: Placement.stack.rawValue)
         stackImages.forEach { model in

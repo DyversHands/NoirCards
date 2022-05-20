@@ -97,9 +97,20 @@ struct DropView: UIViewRepresentable {
             storyV.viewUpdated = { storyModel in
                 if let index = viewModel.droppedImages.firstIndex(where: {$0.id
                     == storyModel.id }){
-                    viewModel.droppedImages[index] = storyModel
+                    viewModel.droppedImages.removeAll(where: {$0.id == storyModel.id})
+                    viewModel.droppedImages.append(storyModel)
+//                    viewModel.droppedImages[index] = storyModel
                 }
             }
+            storyV.cardReturned = { (cardID, imgName) in
+                viewModel.droppedImages.removeAll(where: {$0.id == cardID})
+                viewModel.pickImageFromID(imgName: imgName)
+            }
+            
+            storyV.cardRemoved = { cardID in
+                viewModel.droppedImages.removeAll(where: {$0.id == cardID})
+            }
+            
             uiView.addSubview(storyV)
         }
     }
@@ -115,7 +126,15 @@ struct MyDropDelegate: DropDelegate {
                     if let imgData = data as? Data {
                         if let imgName = String(data: imgData, encoding: .utf8) {
                             stackImages.removeAll(where: {$0.imageName == imgName})
-                            dropImages.append(StoryModel(imageName: imgName, frame: CGRect(x: info.location.x, y: info.location.y, width: cardWidth + 50, height: cardHeight + 50)))
+                            
+                            let cardFrame = CGRect(
+                                x: info.location.x - (cardWidth / 2),
+                                y: info.location.y - (cardHeight / 2),   ///2) + (cardHeight/2) + 50, //info.location.y - (cardHeight / 2),
+                                width: cardWidth ,
+                                height: cardHeight + 50)
+                            print("location" + "\(info.location)")
+
+                            dropImages.append(StoryModel(imageName: imgName, frame: cardFrame))
                         }
                     }
                 }

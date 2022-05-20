@@ -57,8 +57,10 @@ class StoryCard: UIView {
     var initialX: CGFloat = 0
     var initialY: CGFloat = 0
     
-    var viewUpdated : ((StoryModel) -> Void)? = nil
-    
+    var viewUpdated  : ((_ model: StoryModel) -> Void)? = nil
+    var cardRemoved  : ((_ id: String) -> Void)? = nil
+    var cardReturned : ((_ id: String, _ imgName: String) -> Void)? = nil
+
     var cornerRadius : CGFloat = 12 {
         didSet{
             container.layer.cornerRadius = cornerRadius
@@ -125,10 +127,11 @@ class StoryCard: UIView {
         container.layer.borderWidth = 1
         container.layer.borderColor = UIColor.black.cgColor
         
+        
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch))
         let singleTap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        singleTap.numberOfTapsRequired = 1
+        singleTap.numberOfTapsRequired = 2
         
         self.addSubview(button)
         self.addSubview(container)
@@ -143,6 +146,11 @@ class StoryCard: UIView {
         if  model.frame.height ==  zoomedHeight {
             self.superview?.bringSubviewToFront(self)
         }
+        
+        // Context Menu
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        self.addInteraction(interaction)
     }
     
     @objc func handlePan(sender: UIPanGestureRecognizer){
@@ -159,6 +167,7 @@ class StoryCard: UIView {
             
             if sender.state == .ended{
                 self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
+                self.bringSubviewToFront(self)
             }
         }
         
@@ -306,5 +315,27 @@ class StoryCard: UIView {
     
     func updateModel(){
         viewUpdated?(self.model)
+    }
+}
+
+extension StoryCard: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
+                                configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
+            let inspectAction = UIAction(title: NSLocalizedString("Align to Grid", comment: ""), image: UIImage(systemName: "arrow.up.square")) { action in
+//                self.performInspect()
+            }
+            
+            let duplicateAction =
+            UIAction(title: NSLocalizedString("Return to Card Tray", comment: ""), image: UIImage(systemName: "plus.square.on.square")) { action in
+                self.cardReturned?(self.model.id, self.model.imageName)
+            }
+            
+            let deleteAction = UIAction(title: NSLocalizedString("Remove from Play", comment: ""), image: UIImage(systemName: "trash"), attributes: .destructive) { action in
+                self.cardRemoved?(self.model.id)
+            }
+            
+            return UIMenu(title: "", children: [inspectAction, duplicateAction, deleteAction])
+        })
     }
 }

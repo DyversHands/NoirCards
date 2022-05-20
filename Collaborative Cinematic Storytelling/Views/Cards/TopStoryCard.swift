@@ -9,14 +9,21 @@ import SwiftUI
 import UIKit
 
 struct TopStoryCard : View{
+    
     var image : UIImage
+    
     var body: some View{
+        
         HStack{
-            Image(uiImage: image)
-                .resizable()
-                .cornerRadius(12)
-                .frame(width: cardWidth, height: cardHeight)
+            // Added Button Just to highlight the card when ever tapped to show user this card is tappable or draggable
+            Button {
+                print("TopStoryCard Pressed :/")
+            } label: {
+                Image(uiImage: image)
+                    .resizable()
+                    .cornerRadius(12)
+                    .frame(width: cardWidth, height: cardHeight)
+            }
         }
     }
-    
 }
