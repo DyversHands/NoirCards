@@ -56,6 +56,7 @@ class StoryCard: UIView {
     var didChangedInitialX = false
     var initialX: CGFloat = 0
     var initialY: CGFloat = 0
+    var initialText = ""
     
     var viewUpdated  : ((_ model: StoryModel) -> Void)? = nil
     var cardRemoved  : ((_ id: String) -> Void)? = nil
@@ -96,6 +97,10 @@ class StoryCard: UIView {
         button.anchor(top: container.topAnchor, left: container.rightAnchor,  paddingTop: 8, paddingLeft: 8)
         initialX = self.frame.minX
         initialY = self.frame.minY
+        
+        if model.isZoomed {
+            zoomIn(withAnimation: false)
+        }
     }
     
     
@@ -105,6 +110,8 @@ class StoryCard: UIView {
         
         textLbl.numberOfLines = 0
         textLbl.attributedText = CDMarkdownParser().parse(model.text)
+        textLbl.font = UIFont.systemFont(ofSize: 16)
+        initialText = model.text
         
         imgView.image = model.image
         imgView.layer.masksToBounds = true
@@ -197,7 +204,7 @@ class StoryCard: UIView {
         if self.frame.height == normaHeight{
             button.setTitle("Edit", for: .normal)
             self.cornerRadius =  48
-            zoomIn()
+            zoomIn(withAnimation: true)
         }
         else{
             self.cornerRadius =  12
@@ -218,7 +225,6 @@ class StoryCard: UIView {
             textView.isEditable = false
             textLbl.sizeToFit()
             button.setTitle("Edit", for: .normal)
-            self.model.text = self.textView.text
         }
         
         
@@ -234,11 +240,14 @@ class StoryCard: UIView {
                 
             }
         } completion: { status in
-            
+            if self.initialText != self.textView.text {
+                self.model.isZoomed = true
+                self.model.text = self.textView.text
+            }
         }
     }
     
-    func zoomIn(){
+    func zoomIn(withAnimation isAnimated: Bool) {
 
         self.superview?.bringSubviewToFront(self)
         textLbl.alpha = 0
@@ -281,12 +290,19 @@ class StoryCard: UIView {
         let newX = (self.superview!.frame.width / 2) - (zoomedWidth / 2)
         var newY = (self.superview!.frame.height / 2) - (zoomedHeight / 2)
         newY = newY < 0 ? 0 : newY
-        UIView.animate(withDuration: 1) { [self] in
+        if isAnimated {
+            UIView.animate(withDuration: 1) { [self] in
+                self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
+                self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
+            } completion: {[self]  status in
+                self.cornerRadius = 48
+                //model.frame = self.frame
+            }
+        }
+        else {
             self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
             self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
-        } completion: {[self]  status in
             self.cornerRadius = 48
-            //model.frame = self.frame
         }
         
     }
@@ -305,7 +321,7 @@ class StoryCard: UIView {
         
         button.alpha =  0
         UIView.animate(withDuration: 1) { [self] in
-            self.frame = CGRect(x: initialX, y: initialY, width: cardWidth, height: cardHeight)
+            self.frame = CGRect(x: initialX, y: initialY, width: normalWidth, height: normaHeight)
             self.updateHeightWidht(newHeight: normaHeight, newWidth: normalWidth)
             
         } completion: {[self]  status in

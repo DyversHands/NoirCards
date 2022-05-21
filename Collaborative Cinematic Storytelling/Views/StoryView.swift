@@ -130,7 +130,7 @@ struct MyDropDelegate: DropDelegate {
                             let cardFrame = CGRect(
                                 x: info.location.x - (cardWidth / 2),
                                 y: info.location.y - (cardHeight / 2),   ///2) + (cardHeight/2) + 50, //info.location.y - (cardHeight / 2),
-                                width: cardWidth ,
+                                width: cardWidth + 50,
                                 height: cardHeight + 50)
                             print("location" + "\(info.location)")
 
