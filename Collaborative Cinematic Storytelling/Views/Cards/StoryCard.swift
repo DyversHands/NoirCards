@@ -20,6 +20,7 @@ class StoryCard: UIView {
     var vStack = UIStackView()
     var hStack = UIStackView()
     var imgView = UIImageView()
+    var thumbnailImgView = UIImageView()
     var textView = UITextView()
     var button = UIButton()
     let container = UIView()
@@ -92,9 +93,13 @@ class StoryCard: UIView {
         //self.anchor(top: self.superview!.topAnchor, left: self.superview!.leftAnchor,  paddingTop: model.frame.minY, paddingLeft: model.frame.minX, width: model.frame.width, height: model.frame.height)
         container.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor , right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 50 , paddingRight: 50)
         imgView.addConstraintsToFillView(container)
-        textView.addConstraintsToFillView(container)
+//        textView.addConstraintsToFillView(container)
+        textView.anchor(top: thumbnailImgView.bottomAnchor, left: container.leftAnchor, bottom: container.bottomAnchor, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
+//        textView.anchor(top: container.topAnchor, left: container.leftAnchor, paddingTop: 20, paddingLeft: 20)
         textLbl.anchor(top: container.bottomAnchor, left: container.leftAnchor, bottom: bottomAnchor, right: container.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8, height: 34)
         button.anchor(top: container.topAnchor, left: container.rightAnchor,  paddingTop: 8, paddingLeft: 8)
+        thumbnailImgView.anchor(top: container.topAnchor, left: container.leftAnchor, paddingTop: 30, paddingLeft: 30, width: cardWidth, height: cardHeight)
+        thumbnailImgView.isHidden = true
         initialX = self.frame.minX
         initialY = self.frame.minY
         
@@ -116,6 +121,11 @@ class StoryCard: UIView {
         imgView.image = model.image
         imgView.layer.masksToBounds = true
         
+        thumbnailImgView.image = model.image
+        thumbnailImgView.layer.masksToBounds = true
+        thumbnailImgView.alpha = model.frame.width < 750 ? 0 : 1
+        thumbnailImgView.layer.cornerRadius = 8
+        
         textView.isScrollEnabled = false
         textView.isSelectable = false
         textView.alpha = 0
@@ -133,6 +143,7 @@ class StoryCard: UIView {
         container.layer.masksToBounds = true
         container.layer.borderWidth = 1
         container.layer.borderColor = UIColor.black.cgColor
+        container.backgroundColor = .white
         
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
@@ -145,6 +156,7 @@ class StoryCard: UIView {
         self.addSubview(textLbl)
         container.addSubview(textView)
         container.addSubview(imgView)
+        container.addSubview(thumbnailImgView)
         self.addGestureRecognizer(singleTap)
         self.addGestureRecognizer(panGesture)
         //self.addGestureRecognizer(pinchGesture)
@@ -219,12 +231,15 @@ class StoryCard: UIView {
             //textView.becomeFirstResponder()
             textView.isEditable = true
             button.setTitle("Done", for: .normal)
+            thumbnailImgView.isHidden = false
         }
         else if button.titleLabel?.text == "Done"{
             textView.resignFirstResponder()
             textView.isEditable = false
             textLbl.sizeToFit()
             button.setTitle("Edit", for: .normal)
+            thumbnailImgView.isHidden = true
+
         }
         
         
@@ -252,6 +267,7 @@ class StoryCard: UIView {
         self.superview?.bringSubviewToFront(self)
         textLbl.alpha = 0
         button.alpha = 1
+        thumbnailImgView.alpha = 1
         /*
         var newX = frame.minX - (zoomedWidth - normalWidth)/2 < 0 ? 0 : frame.minX - (zoomedWidth - normalWidth)/2
         
@@ -320,6 +336,7 @@ class StoryCard: UIView {
 //        }
         
         button.alpha =  0
+        thumbnailImgView.alpha = 0
         UIView.animate(withDuration: 1) { [self] in
             self.frame = CGRect(x: initialX, y: initialY, width: normalWidth, height: normaHeight)
             self.updateHeightWidht(newHeight: normaHeight, newWidth: normalWidth)
