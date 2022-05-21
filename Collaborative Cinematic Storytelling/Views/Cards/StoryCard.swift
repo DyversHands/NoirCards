@@ -243,7 +243,7 @@ class StoryCard: UIView {
         self.superview?.bringSubviewToFront(self)
         textLbl.alpha = 0
         button.alpha = 1
-        
+        /*
         var newX = frame.minX - (zoomedWidth - normalWidth)/2 < 0 ? 0 : frame.minX - (zoomedWidth - normalWidth)/2
         
         var newY = frame.minX - (zoomedHeight - normaHeight)/2 < 0 ? 0 : frame.minY - (zoomedHeight - normaHeight)/2
@@ -277,7 +277,10 @@ class StoryCard: UIView {
         else { // when card is at center no change in newX
             didChangedInitialX = true
         }
-        
+        */
+        let newX = (self.superview!.frame.width / 2) - (zoomedWidth / 2)
+        var newY = (self.superview!.frame.height / 2) - (zoomedHeight / 2)
+        newY = newY < 0 ? 0 : newY
         UIView.animate(withDuration: 1) { [self] in
             self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
             self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
@@ -290,19 +293,19 @@ class StoryCard: UIView {
     
     func zoomOut(){
         
-        var newY = self.frame.minY
-        var newX = self.frame.minX
+//        let newY = initialY
+//        let newX = initialX
         
-        if didChangedInitialY {
-            newY = initialY
-        }
-        if didChangedInitialX {
-            newX = initialX
-        }
+//        if didChangedInitialY {
+//            newY = initialY
+//        }
+//        if didChangedInitialX {
+//            newX = initialX
+//        }
         
         button.alpha =  0
         UIView.animate(withDuration: 1) { [self] in
-            self.frame = CGRect(x: newX, y: newY, width: normalWidth, height: normaHeight)
+            self.frame = CGRect(x: initialX, y: initialY, width: cardWidth, height: cardHeight)
             self.updateHeightWidht(newHeight: normaHeight, newWidth: normalWidth)
             
         } completion: {[self]  status in
