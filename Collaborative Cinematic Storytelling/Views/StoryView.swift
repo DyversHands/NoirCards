@@ -18,16 +18,16 @@ struct StoryView: View {
         
         HStack{
             Spacer(minLength: 8)
-            VStack(spacing: 12){
+            VStack(spacing: 0){
                 HStack{
                     Spacer(minLength: 20)
                     Text("Freeform Story").font(Font.system(.headline, design: .default))
                     Spacer(minLength: 20)
-                    Button {
-                        viewModel.pickRandomImage()
-                    } label: {
-                        Image(systemName: "camera.metering.spot")
-                    }
+//                    Button {
+//                        viewModel.pickRandomImage()
+//                    } label: {
+//                        Image(systemName: "camera.metering.spot")
+//                    }
                     
                 }
                 
@@ -35,7 +35,7 @@ struct StoryView: View {
                 Color.black.frame(height: 3)
                 DropView(viewModel: viewModel)
                     .onDrop(of: [imageType], delegate:  MyDropDelegate(dropImages: $viewModel.droppedImages, stackImages: $viewModel.stackImages))
-                Spacer(minLength: 100)
+//                Spacer(minLength: 100)
             }
             Spacer(minLength: 8)
         }
@@ -55,26 +55,44 @@ struct StoryView_Previews: PreviewProvider {
 
 struct TopCardsView : View{
     @ObservedObject var viewModel: StoryViewModel
-    var body: some View{
-        ZStack(alignment : .leading){
-            HStack(spacing : 16){
-                EmptyCard()
-                EmptyCard()
-                EmptyCard()
-                EmptyCard()
-                EmptyCard()
-                EmptyCard()
-                EmptyCard()
-            }
-            LazyHStack (spacing : 16){
-                ForEach(viewModel.stackImages, id: \.self) { model in
-                    TopStoryCard(image: model.image)
-                        .onDrag {
-                            return NSItemProvider(object: model.imageName as NSItemProviderWriting)
-                        }
+    var body: some View {
+        
+        HStack(spacing: 10) {
+            
+            ZStack(alignment : .leading) {
+                
+                HStack(spacing : 16) {
+                    EmptyCard()
+                    EmptyCard()
+                    EmptyCard()
+                    EmptyCard()
+                    EmptyCard()
+                    EmptyCard()
+                    EmptyCard()
+                }
+                
+                LazyHStack (spacing : 16) {
+                    ForEach(viewModel.stackImages, id: \.self) { model in
+                        TopStoryCard(viewModel: viewModel, image: model.image)
+                            .onDrag {
+                                return NSItemProvider(object: model.imageName as NSItemProviderWriting)
+                            }
+                    }
                 }
             }
+            
+            Button {
+                viewModel.pickRandomImage()
+            } label: {
+                Image(systemName: "plus")
+                    .resizable()
+                    .frame(width: 50, height: 50, alignment: .center)
+            }
+            .disabled(viewModel.stackImages.count == 7)
+            .frame(width: 80, height: 50, alignment: .center)
+            
         }
+        .padding(.vertical,5)
         .frame(width: UIScreen.main.bounds.width, height: 120, alignment: .top)
         
         

@@ -43,7 +43,8 @@ public class StoryViewModel: ObservableObject {
     func pickRandomImage(){
         
         if stackImages.count > 6{
-            stackImages.removeFirst()
+            return // to stop adding images in stack when stack is full
+//            stackImages.removeFirst()
         }
         
         if let img = images.randomElement(){

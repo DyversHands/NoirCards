@@ -233,7 +233,7 @@ class StoryCard: UIView {
             button.setTitle("Done", for: .normal)
             thumbnailImgView.isHidden = false
         }
-        else if button.titleLabel?.text == "Done"{
+        else if button.titleLabel?.text == "Done" {
             textView.resignFirstResponder()
             textView.isEditable = false
             textLbl.sizeToFit()
@@ -334,6 +334,9 @@ class StoryCard: UIView {
 //        if didChangedInitialX {
 //            newX = initialX
 //        }
+        if button.titleLabel?.text == "Done" {
+            return
+        }
         
         button.alpha =  0
         thumbnailImgView.alpha = 0
