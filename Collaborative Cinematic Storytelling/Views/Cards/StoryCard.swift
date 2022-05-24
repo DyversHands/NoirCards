@@ -184,8 +184,14 @@ class StoryCard: UIView {
             sender.setTranslation(CGPoint.zero, in: self.superview)
             print("translated Point",frame.minX  , frame.minY)
             
-            if sender.state == .ended{
-                self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
+            if sender.state == .ended {
+                // grid calculation 
+                let newX = floor(self.frame.midX / normalWidth) * normalWidth
+                let newY = floor(self.frame.midY / normaHeight) * normaHeight
+                
+                print("coordinates" , newX,newY)
+                self.model.frame = CGRect(x: newX, y: newY, width: frame.width, height: frame.height)
+//                self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
                 self.bringSubviewToFront(self)
             }
         }

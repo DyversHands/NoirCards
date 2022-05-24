@@ -22,17 +22,20 @@ struct StoryView: View {
                 HStack{
                     Spacer(minLength: 20)
                     Text("Freeform Story").font(Font.system(.headline, design: .default))
+                        .frame(height: 30)
                     Spacer(minLength: 20)
-//                    Button {
-//                        viewModel.pickRandomImage()
-//                    } label: {
-//                        Image(systemName: "camera.metering.spot")
-//                    }
+                    /*
+                    Button {
+                        viewModel.pickRandomImage()
+                    } label: {
+                        Image(systemName: "camera.metering.spot")
+                    }
+                     */
                     
                 }
                 
                 TopCardsView(viewModel: viewModel)
-                Color.black.frame(height: 3)
+                Color.black.frame(height: 3).padding(.vertical)
                 DropView(viewModel: viewModel)
                     .onDrop(of: [imageType], delegate:  MyDropDelegate(dropImages: $viewModel.droppedImages, stackImages: $viewModel.stackImages))
 //                Spacer(minLength: 100)
