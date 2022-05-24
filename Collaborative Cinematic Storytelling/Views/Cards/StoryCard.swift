@@ -217,11 +217,9 @@ class StoryCard: UIView {
         
         if self.frame.height == normaHeight{
             button.setTitle("Edit", for: .normal)
-            self.cornerRadius =  48
             zoomIn(withAnimation: true)
         }
         else{
-            self.cornerRadius =  12
             zoomOut()
         }
         
@@ -312,9 +310,7 @@ class StoryCard: UIView {
             UIView.animate(withDuration: 1) { [self] in
                 self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
                 self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
-            } completion: {[self]  status in
                 self.cornerRadius = 48
-                //model.frame = self.frame
             }
         }
         else {
@@ -327,15 +323,6 @@ class StoryCard: UIView {
     
     func zoomOut(){
         
-//        let newY = initialY
-//        let newX = initialX
-        
-//        if didChangedInitialY {
-//            newY = initialY
-//        }
-//        if didChangedInitialX {
-//            newX = initialX
-//        }
         if button.titleLabel?.text == "Done" {
             return
         }
@@ -345,11 +332,12 @@ class StoryCard: UIView {
         UIView.animate(withDuration: 1) { [self] in
             self.frame = CGRect(x: initialX, y: initialY, width: normalWidth, height: normaHeight)
             self.updateHeightWidht(newHeight: normaHeight, newWidth: normalWidth)
+            self.cornerRadius = 12
             
         } completion: {[self]  status in
             textLbl.alpha = 1
             self.cornerRadius = 12
-            //model.frame = self.frame
+            self.model.isZoomed = false
         }
     }
     
