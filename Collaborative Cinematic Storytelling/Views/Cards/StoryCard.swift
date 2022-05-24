@@ -159,7 +159,7 @@ class StoryCard: UIView {
         container.addSubview(thumbnailImgView)
         self.addGestureRecognizer(singleTap)
         self.addGestureRecognizer(panGesture)
-        //self.addGestureRecognizer(pinchGesture)
+        self.addGestureRecognizer(pinchGesture)
         
         self.cornerRadius = model.frame.height ==  zoomedHeight ? 48 : 12
         if  model.frame.height ==  zoomedHeight {
@@ -195,22 +195,25 @@ class StoryCard: UIView {
         
     }
     
-    @objc func handlePinch(sender: UIPinchGestureRecognizer){
-        let scale = sender.scale
-        print("scale",scale)
-        let width = frame.width * scale
-        let height = frame.height * scale
+    @objc func handlePinch(sender: UIPinchGestureRecognizer) {
         
-        if width <= 700 && width >= 88 && height <= 500 && height >= 63 {
-            UIView.animate(withDuration: 1) { [self] in
-                self.cornerRadius =  scale * 12
-                self.frame = CGRect(x: frame.minX, y: frame.minY, width: width, height: height)
-                
-            }
-            self.textView.font = UIFont.systemFont(ofSize: 17 * scale)
-            
+        if sender.state == .changed {
+            self.superview?.bringSubviewToFront(self)
+            let scale = sender.scale
+            let width = (model.isZoomed ? zoomedWidth : normalWidth) * scale
+            let height = (model.isZoomed ? zoomedHeight : normaHeight) * scale
+            self.frame = CGRect(x: frame.minX, y: frame.minY, width: width, height: height)
         }
-        
+        else if sender.state == .ended {
+            // set size to zoomed and centered
+            if frame.width > (zoomedWidth - 200) || frame.height > ( zoomedHeight - 200) {
+                zoomIn(withAnimation: true)
+            }
+            else {
+                print("Zoom Out")
+                zoomOut()
+            }
+        }
     }
     
     @objc func handleTap(sender : UITapGestureRecognizer){
@@ -268,41 +271,7 @@ class StoryCard: UIView {
         textLbl.alpha = 0
         button.alpha = 1
         thumbnailImgView.alpha = 1
-        /*
-        var newX = frame.minX - (zoomedWidth - normalWidth)/2 < 0 ? 0 : frame.minX - (zoomedWidth - normalWidth)/2
-        
-        var newY = frame.minX - (zoomedHeight - normaHeight)/2 < 0 ? 0 : frame.minY - (zoomedHeight - normaHeight)/2
-        
-        if newY <= 0 { // when newY is goint offset from top
-            newY = self.frame.minY
-            
-        }
-        /*// to prevent offset from bottom
-        else if newY + zoomedHeight > (self.superview!.frame.maxY) {
-            newY = self.frame.minY - zoomedWidth/2
-            didChangedInitialY = true
-        }
-         */
 
-        else { // when card is at bottom or center no change in newY
-            didChangedInitialY = true
-        }
-
-        
-        // Checking For X Offsets
-        if newX <= 0 { // when newX is goint off left from screen
-            newX = self.frame.minX
-        }
-        // when card total width is going off right from screen
-        else if newX + zoomedWidth > (self.superview!.frame.maxX) {
-            let editBtnOffset = self.frame.maxX - self.superview!.frame.maxX
-            newX = self.frame.minX - zoomedWidth + normalWidth - editBtnOffset
-            didChangedInitialX = true
-        }
-        else { // when card is at center no change in newX
-            didChangedInitialX = true
-        }
-        */
         let newX = (self.superview!.frame.width / 2) - (zoomedWidth / 2)
         var newY = (self.superview!.frame.height / 2) - (zoomedHeight / 2)
         newY = newY < 0 ? 0 : newY
@@ -311,6 +280,9 @@ class StoryCard: UIView {
                 self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
                 self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
                 self.cornerRadius = 48
+            } completion: { status in
+                self.cornerRadius = 48
+                self.model.isZoomed = true
             }
         }
         else {
@@ -344,9 +316,12 @@ class StoryCard: UIView {
     func alignToGrid() {
         let newX = floor(self.frame.midX / normalWidth) * normalWidth
         let newY = floor(self.frame.midY / normaHeight) * normaHeight
-        
-        print("coordinates" , newX,newY)
-        self.model.frame = CGRect(x: newX, y: newY, width: frame.width, height: frame.height)
+        UIView.animate(withDuration: 0.5) {
+            self.frame = CGRect(x: newX, y: newY, width: self.frame.width, height: self.frame.height)
+        } completion: { status in
+            self.model.frame = CGRect(x: newX, y: newY, width: self.frame.width, height: self.frame.height)
+        }
+
 
     }
     
