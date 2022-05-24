@@ -185,12 +185,8 @@ class StoryCard: UIView {
             print("translated Point",frame.minX  , frame.minY)
             
             if sender.state == .ended {
-                // grid calculation 
-                let newX = floor(self.frame.midX / normalWidth) * normalWidth
-                let newY = floor(self.frame.midY / normaHeight) * normaHeight
-                
-                print("coordinates" , newX,newY)
-                self.model.frame = CGRect(x: newX, y: newY, width: frame.width, height: frame.height)
+                // grid calculation
+                alignToGrid()
 //                self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
                 self.bringSubviewToFront(self)
             }
@@ -357,6 +353,15 @@ class StoryCard: UIView {
         }
     }
     
+    func alignToGrid() {
+        let newX = floor(self.frame.midX / normalWidth) * normalWidth
+        let newY = floor(self.frame.midY / normaHeight) * normaHeight
+        
+        print("coordinates" , newX,newY)
+        self.model.frame = CGRect(x: newX, y: newY, width: frame.width, height: frame.height)
+
+    }
+    
     
     func updateModel(){
         viewUpdated?(self.model)
@@ -368,7 +373,7 @@ extension StoryCard: UIContextMenuInteractionDelegate {
                                 configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
             let inspectAction = UIAction(title: NSLocalizedString("Align to Grid", comment: ""), image: UIImage(systemName: "arrow.up.square")) { action in
-//                self.performInspect()
+                self.alignToGrid()
             }
             
             let duplicateAction =
