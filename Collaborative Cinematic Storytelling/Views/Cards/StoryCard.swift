@@ -162,7 +162,7 @@ class StoryCard: UIView {
         container.addSubview(textView)
         container.addSubview(imgView)
         container.addSubview(thumbnailImgView)
-        self.addGestureRecognizer(singleTap)
+//        self.addGestureRecognizer(singleTap)
         self.addGestureRecognizer(doubleTap)
         self.addGestureRecognizer(panGesture)
         self.addGestureRecognizer(pinchGesture)
@@ -202,21 +202,23 @@ class StoryCard: UIView {
     
     @objc func handlePinch(sender: UIPinchGestureRecognizer) {
         
-        if sender.state == .changed {
-            self.superview?.bringSubviewToFront(self)
-            let scale = sender.scale
-            let width = (model.isZoomed ? zoomedWidth : normalWidth) * scale
-            let height = (model.isZoomed ? zoomedHeight : normaHeight) * scale
-            self.frame = CGRect(x: frame.minX, y: frame.minY, width: width, height: height)
-        }
-        else if sender.state == .ended {
-            // set size to zoomed and centered
-            if frame.width > (zoomedWidth - 200) || frame.height > ( zoomedHeight - 200) {
-                zoomIn(withAnimation: true)
+        if isCardZoomed == false {
+            if sender.state == .changed {
+                self.superview?.bringSubviewToFront(self)
+                let scale = sender.scale
+                let width = (model.isZoomed ? zoomedWidth : normalWidth) * scale
+                let height = (model.isZoomed ? zoomedHeight : normaHeight) * scale
+                self.frame = CGRect(x: frame.minX, y: frame.minY, width: width, height: height)
             }
-            else {
-                print("Zoom Out")
-                zoomOut()
+            else if sender.state == .ended {
+                // set size to zoomed and centered
+                if frame.width > (zoomedWidth - 200) || frame.height > ( zoomedHeight - 200) {
+                    zoomIn(withAnimation: true)
+                }
+                else {
+                    print("Zoom Out")
+                    zoomOut()
+                }
             }
         }
     }
@@ -285,10 +287,10 @@ class StoryCard: UIView {
         button.alpha = 1
         thumbnailImgView.alpha = 1
 
-        let newX = (self.superview!.frame.width / 2) - (zoomedWidth / 2)
+        let newX = (self.superview!.frame.width / 2) - (zoomedWidth / 2) + 25
         var newY = (self.superview!.frame.height / 2) - (zoomedHeight / 2)
         newY = newY < 0 ? 0 : newY
-        if isAnimated {
+        if isAnimated && isCardZoomed == false {
             UIView.animate(withDuration: 1) { [self] in
                 self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
                 self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
@@ -298,7 +300,7 @@ class StoryCard: UIView {
                 self.model.isZoomed = true
             }
         }
-        else {
+        else if model.isZoomed {
             self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
             self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
             self.cornerRadius = 48
