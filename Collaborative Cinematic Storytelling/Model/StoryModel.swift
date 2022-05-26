@@ -18,7 +18,11 @@ struct StoryModel : Hashable{
     }
     var frame : CGRect = CGRect(x: 0, y: 0, width: cardWidth, height: cardHeight)
     var text : String = ""
-    var isZoomed = false
+    var isZoomed = false {
+        didSet {
+            isCardZoomed = isZoomed
+        }
+    }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(imageName)

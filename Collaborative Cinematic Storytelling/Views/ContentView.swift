@@ -11,6 +11,7 @@ import CoreData
 
 let cardHeight : CGFloat = UIScreen.main.bounds.width * 0.09
 let cardWidth : CGFloat = UIScreen.main.bounds.width * 0.125
+var isCardZoomed = false
 
 struct ContentView: View {
 

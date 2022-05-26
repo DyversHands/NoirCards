@@ -179,26 +179,25 @@ class StoryCard: UIView {
     }
     
     @objc func handlePan(sender: UIPanGestureRecognizer){
-        
-        let translation: CGPoint = sender.translation(in: self.superview)
-        self.superview?.bringSubviewToFront(self)
-        //if sender.state == .changed{
-        let x = self.center.x + translation.x
-        let y = self.center.y + translation.y
-        if x >= frame.width/2 && y >= frame.height/2{
-            self.center = CGPoint(x: x, y:y )
-            sender.setTranslation(CGPoint.zero, in: self.superview)
-            print("translated Point",frame.minX  , frame.minY)
-            
-            if sender.state == .ended {
-                // grid calculation
-                alignToGrid()
-//                self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
-                self.bringSubviewToFront(self)
+        if !isCardZoomed {
+            let translation: CGPoint = sender.translation(in: self.superview)
+            self.superview?.bringSubviewToFront(self)
+            //if sender.state == .changed{
+            let x = self.center.x + translation.x
+            let y = self.center.y + translation.y
+            if x >= frame.width/2 && y >= frame.height/2{
+                self.center = CGPoint(x: x, y:y )
+                sender.setTranslation(CGPoint.zero, in: self.superview)
+                print("translated Point",frame.minX  , frame.minY)
+                
+                if sender.state == .ended {
+                    // grid calculation
+                    alignToGrid()
+                    //self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
+                    self.bringSubviewToFront(self)
+                }
             }
         }
-        
-        
     }
     
     @objc func handlePinch(sender: UIPinchGestureRecognizer) {
