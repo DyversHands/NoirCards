@@ -63,7 +63,7 @@ class StoryCard: UIView {
     var viewUpdated  : ((_ model: StoryModel) -> Void)? = nil
     var cardRemoved  : ((_ id: String) -> Void)? = nil
     var cardReturned : ((_ id: String, _ imgName: String) -> Void)? = nil
-
+    
     var cornerRadius : CGFloat = 12 {
         didSet{
             container.layer.cornerRadius = cornerRadius
@@ -96,11 +96,11 @@ class StoryCard: UIView {
         container.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor , right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 50 , paddingRight: 50)
         imgView.addConstraintsToFillView(container)
 //        textView.addConstraintsToFillView(container)
-        textView.anchor(top: thumbnailImgView.bottomAnchor, left: container.leftAnchor, bottom: container.bottomAnchor, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
+        textView.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: container.bottomAnchor, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
 //        textView.anchor(top: container.topAnchor, left: container.leftAnchor, paddingTop: 20, paddingLeft: 20)
         textLbl.anchor(top: container.bottomAnchor, left: container.leftAnchor, bottom: bottomAnchor, right: container.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8, height: 34)
         button.anchor(top: container.topAnchor, left: container.rightAnchor,  paddingTop: 8, paddingLeft: 8)
-        thumbnailImgView.anchor(top: container.topAnchor, left: container.leftAnchor, paddingTop: 30, paddingLeft: 30, width: cardWidth, height: cardHeight)
+        thumbnailImgView.anchor(bottom: container.bottomAnchor, right: container.rightAnchor, paddingBottom: 30, paddingRight: 30, width: cardWidth, height: cardHeight)
         highlightView.addConstraintsToFillView(container)
         thumbnailImgView.isHidden = true
         initialX = self.frame.minX
@@ -154,7 +154,10 @@ class StoryCard: UIView {
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapToZoom))
         doubleTap.numberOfTapsRequired = 2
         let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapToHighlight))
-        
+        singleTap.numberOfTapsRequired = 1
+        // single tap will only fail on double tap otherwise double tap was not working with single tap
+        singleTap.require(toFail: doubleTap)
+        singleTap.delaysTouchesBegan = true
         self.addSubview(button)
         self.addSubview(container)
         self.addSubview(textLbl)
@@ -162,7 +165,7 @@ class StoryCard: UIView {
         container.addSubview(textView)
         container.addSubview(imgView)
         container.addSubview(thumbnailImgView)
-//        self.addGestureRecognizer(singleTap)
+        self.addGestureRecognizer(singleTap)
         self.addGestureRecognizer(doubleTap)
         self.addGestureRecognizer(panGesture)
         self.addGestureRecognizer(pinchGesture)
@@ -247,17 +250,19 @@ class StoryCard: UIView {
     @objc func editText(){
         if button.titleLabel?.text == "Edit"{
             //textView.becomeFirstResponder()
+            highlightView.isHidden = true
             textView.isEditable = true
             button.setTitle("Done", for: .normal)
             thumbnailImgView.isHidden = false
         }
         else if button.titleLabel?.text == "Done" {
+            highlightView.isHidden = false
             textView.resignFirstResponder()
             textView.isEditable = false
             textLbl.sizeToFit()
             button.setTitle("Edit", for: .normal)
             thumbnailImgView.isHidden = true
-
+            
         }
         
         
@@ -281,12 +286,12 @@ class StoryCard: UIView {
     }
     
     func zoomIn(withAnimation isAnimated: Bool) {
-
+        
         self.superview?.bringSubviewToFront(self)
-        textLbl.alpha = 0
+//        textLbl.alpha = 0
         button.alpha = 1
         thumbnailImgView.alpha = 1
-
+        
         let newX = (self.superview!.frame.width / 2) - (zoomedWidth / 2) + 25
         var newY = (self.superview!.frame.height / 2) - (zoomedHeight / 2)
         newY = newY < 0 ? 0 : newY
@@ -322,7 +327,7 @@ class StoryCard: UIView {
             self.cornerRadius = 12
             
         } completion: {[self]  status in
-            textLbl.alpha = 1
+//            textLbl.alpha = 1
             self.cornerRadius = 12
             self.model.isZoomed = false
         }
@@ -336,8 +341,8 @@ class StoryCard: UIView {
         } completion: { status in
             self.model.frame = CGRect(x: newX, y: newY, width: self.frame.width, height: self.frame.height)
         }
-
-
+        
+        
     }
     
     
