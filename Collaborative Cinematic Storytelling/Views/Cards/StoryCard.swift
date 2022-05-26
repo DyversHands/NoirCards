@@ -25,6 +25,7 @@ class StoryCard: UIView {
     var button = UIButton()
     let container = UIView()
     let textLbl = UILabel()
+    let highlightView = UIView()
     
     private var showingBack = false
     
@@ -68,6 +69,7 @@ class StoryCard: UIView {
             container.layer.cornerRadius = cornerRadius
             imgView.layer.cornerRadius = cornerRadius
             textView.layer.cornerRadius = cornerRadius
+            highlightView.layer.cornerRadius = cornerRadius
         }
     }
     
@@ -99,6 +101,7 @@ class StoryCard: UIView {
         textLbl.anchor(top: container.bottomAnchor, left: container.leftAnchor, bottom: bottomAnchor, right: container.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8, height: 34)
         button.anchor(top: container.topAnchor, left: container.rightAnchor,  paddingTop: 8, paddingLeft: 8)
         thumbnailImgView.anchor(top: container.topAnchor, left: container.leftAnchor, paddingTop: 30, paddingLeft: 30, width: cardWidth, height: cardHeight)
+        highlightView.addConstraintsToFillView(container)
         thumbnailImgView.isHidden = true
         initialX = self.frame.minX
         initialY = self.frame.minY
@@ -148,16 +151,19 @@ class StoryCard: UIView {
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch))
-        let singleTap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        singleTap.numberOfTapsRequired = 2
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapToZoom))
+        doubleTap.numberOfTapsRequired = 2
+        let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapToHighlight))
         
         self.addSubview(button)
         self.addSubview(container)
         self.addSubview(textLbl)
+        self.addSubview(highlightView)
         container.addSubview(textView)
         container.addSubview(imgView)
         container.addSubview(thumbnailImgView)
         self.addGestureRecognizer(singleTap)
+        self.addGestureRecognizer(doubleTap)
         self.addGestureRecognizer(panGesture)
         self.addGestureRecognizer(pinchGesture)
         
@@ -216,7 +222,7 @@ class StoryCard: UIView {
         }
     }
     
-    @objc func handleTap(sender : UITapGestureRecognizer){
+    @objc func doubleTapToZoom(sender : UITapGestureRecognizer){
         
         if self.frame.height == normaHeight{
             button.setTitle("Edit", for: .normal)
@@ -227,6 +233,14 @@ class StoryCard: UIView {
         }
         
         
+    }
+    
+    @objc func singleTapToHighlight(sender: UITapGestureRecognizer) {
+        UIView.animate(withDuration: 0.2) {
+            self.highlightView.backgroundColor = .white
+        } completion: { completed in
+            self.highlightView.backgroundColor = .clear
+        }
     }
     
     @objc func editText(){
