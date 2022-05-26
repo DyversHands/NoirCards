@@ -161,10 +161,10 @@ class StoryCard: UIView {
         self.addSubview(button)
         self.addSubview(container)
         self.addSubview(textLbl)
-        self.addSubview(highlightView)
         container.addSubview(textView)
         container.addSubview(imgView)
         container.addSubview(thumbnailImgView)
+        container.addSubview(highlightView)
         self.addGestureRecognizer(singleTap)
         self.addGestureRecognizer(doubleTap)
         self.addGestureRecognizer(panGesture)
@@ -177,8 +177,8 @@ class StoryCard: UIView {
         
         // Context Menu
         
-        let interaction = UIContextMenuInteraction(delegate: self)
-        self.addInteraction(interaction)
+        let interaction = UIContextMenuInteraction(delegate: container)
+        container.addInteraction(interaction)
     }
     
     @objc func handlePan(sender: UIPanGestureRecognizer){
@@ -351,21 +351,28 @@ class StoryCard: UIView {
     }
 }
 
-extension StoryCard: UIContextMenuInteractionDelegate {
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
+extension UIView: UIContextMenuInteractionDelegate {
+    public func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
                                 configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
             let inspectAction = UIAction(title: NSLocalizedString("Align to Grid", comment: ""), image: UIImage(systemName: "arrow.up.square")) { action in
-                self.alignToGrid()
+                if let storyView = self.superview as? StoryCard {
+                    storyView.alignToGrid()
+                }
             }
             
             let duplicateAction =
             UIAction(title: NSLocalizedString("Return to Card Tray", comment: ""), image: UIImage(systemName: "plus.square.on.square")) { action in
-                self.cardReturned?(self.model.id, self.model.imageName)
+                if let storyView = self.superview as? StoryCard {
+                    storyView.cardReturned?(storyView.model.id, storyView.model.imageName)
+                }
+
             }
             
             let deleteAction = UIAction(title: NSLocalizedString("Remove from Play", comment: ""), image: UIImage(systemName: "trash"), attributes: .destructive) { action in
-                self.cardRemoved?(self.model.id)
+                if let storyView = self.superview as? StoryCard {
+                    storyView.cardRemoved?(storyView.model.id)
+                }
             }
             
             return UIMenu(title: "", children: [inspectAction, duplicateAction, deleteAction])
