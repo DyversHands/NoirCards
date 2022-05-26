@@ -16,6 +16,7 @@ class StoryCard: UIView {
             updateModel()
         }
     }
+    var storyViewModel: StoryViewModel
     
     var vStack = UIStackView()
     var hStack = UIStackView()
@@ -74,8 +75,9 @@ class StoryCard: UIView {
     }
     
     
-    init(model : StoryModel, frame: CGRect) {
+    init(model : StoryModel, storyViewModel: StoryViewModel, frame: CGRect) {
         self.model = model
+        self.storyViewModel = storyViewModel
         super.init(frame: frame)
         configureView(frame: frame)
     }
@@ -345,6 +347,21 @@ class StoryCard: UIView {
         
     }
     
+    func animateToCardTray() {
+        if storyViewModel.stackImages.count < 7 {
+            var newX = 6.0
+            for _ in storyViewModel.stackImages {
+                newX += (cardWidth * 1.0424)
+            }
+            UIView.animate(withDuration: 1) { [self] in
+                self.frame = CGRect(x: newX, y: -(cardHeight * 1.51), width: normalWidth - 10, height: normaHeight)
+            } completion: { completed in
+                self.cardReturned?(self.model.id, self.model.imageName)
+            }
+
+        }
+    }
+    
     
     func updateModel(){
         viewUpdated?(self.model)
@@ -364,7 +381,8 @@ extension UIView: UIContextMenuInteractionDelegate {
             let duplicateAction =
             UIAction(title: NSLocalizedString("Return to Card Tray", comment: ""), image: UIImage(systemName: "plus.square.on.square")) { action in
                 if let storyView = self.superview as? StoryCard {
-                    storyView.cardReturned?(storyView.model.id, storyView.model.imageName)
+                    storyView.animateToCardTray()
+//                    storyView.cardReturned?(storyView.model.id, storyView.model.imageName)
                 }
 
             }

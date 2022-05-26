@@ -35,7 +35,7 @@ struct StoryView: View {
                 }
                 
                 TopCardsView(viewModel: viewModel)
-                Color.black.frame(height: 3).padding(.vertical)
+                Color.black.frame(height: 3).padding(.vertical,20)
                 DropView(viewModel: viewModel)
                     .onDrop(of: [imageType], delegate:  MyDropDelegate(dropImages: $viewModel.droppedImages, stackImages: $viewModel.stackImages))
 //                Spacer(minLength: 100)
@@ -114,7 +114,7 @@ struct DropView: UIViewRepresentable {
             subV.removeFromSuperview()
         }
         for image in viewModel.droppedImages{
-            let storyV = StoryCard(model:image, frame: image.frame)
+            let storyV = StoryCard(model:image, storyViewModel: viewModel, frame: image.frame)
             storyV.viewUpdated = { storyModel in
                 if let index = viewModel.droppedImages.firstIndex(where: {$0.id
                     == storyModel.id }){
