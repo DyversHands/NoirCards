@@ -135,7 +135,7 @@ class StoryCard: UIView {
         textView.isSelectable = false
         textView.alpha = 0
         textView.isEditable = true
-        textView.contentInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
+        textView.contentInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
         textView.font = UIFont.systemFont(ofSize: 60)
         textView.text = model.text
         
@@ -207,7 +207,7 @@ class StoryCard: UIView {
     
     @objc func handlePinch(sender: UIPinchGestureRecognizer) {
         
-        if isCardZoomed == false {
+        if model.isZoomed || isCardZoomed == false {
             if sender.state == .changed {
                 self.superview?.bringSubviewToFront(self)
                 let scale = sender.scale
