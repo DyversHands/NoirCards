@@ -23,7 +23,7 @@ class StoryCard: UIView {
     var imgView = UIImageView()
     var thumbnailImgView = UIImageView()
     var textView = UITextView()
-    var button = UIButton()
+//    var button = UIButton()
     let container = UIView()
     let textLbl = UILabel()
     let highlightView = UIView()
@@ -32,13 +32,13 @@ class StoryCard: UIView {
     
     private var zoomedHeight : CGFloat{
         get{
-            return cardHeight * 5 + 50
+            return cardHeight * 5 //+ 50
         }
     }
     
     private var zoomedWidth : CGFloat{
         get{
-            return cardWidth * 5 + 50
+            return cardWidth * 5 //+ 50
         }
     }
     
@@ -101,7 +101,7 @@ class StoryCard: UIView {
         textView.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: container.bottomAnchor, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
 //        textView.anchor(top: container.topAnchor, left: container.leftAnchor, paddingTop: 20, paddingLeft: 20)
         textLbl.anchor(top: container.bottomAnchor, left: container.leftAnchor, bottom: bottomAnchor, right: container.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8, height: 34)
-        button.anchor(top: container.topAnchor, left: container.rightAnchor,  paddingTop: 8, paddingLeft: 8)
+//        button.anchor(top: container.topAnchor, left: container.rightAnchor,  paddingTop: 8, paddingLeft: 8)
         thumbnailImgView.anchor(bottom: container.bottomAnchor, right: container.rightAnchor, paddingBottom: 30, paddingRight: 30, width: cardWidth, height: cardHeight)
         highlightView.addConstraintsToFillView(container)
         thumbnailImgView.isHidden = true
@@ -139,41 +139,52 @@ class StoryCard: UIView {
         textView.font = UIFont.systemFont(ofSize: 60)
         textView.text = model.text
         
-        button.alpha = model.frame.width < 750 ? 0 : 1
-        button.tintColor = .black
-        button.setTitle("Edit", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.addTarget(self, action: #selector(editText), for: .touchDown)
+//        button.alpha = model.frame.width < 750 ? 0 : 1
+//        button.tintColor = .black
+//        button.setTitle("Edit", for: .normal)
+//        button.setTitleColor(.black, for: .normal)
+//        button.addTarget(self, action: #selector(editText), for: .touchDown)
         
         container.layer.masksToBounds = true
         container.layer.borderWidth = 1
         container.layer.borderColor = UIColor.black.cgColor
         container.backgroundColor = .white
         
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(swipeMade))
+        rightSwipe.direction = .right
+        
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(swipeMade))
+        leftSwipe.direction = .left
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch))
+        
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapToZoom))
         doubleTap.numberOfTapsRequired = 2
+        
         let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapToHighlight))
         singleTap.numberOfTapsRequired = 1
         // single tap will only fail on double tap otherwise double tap was not working with single tap
         singleTap.require(toFail: doubleTap)
         singleTap.delaysTouchesBegan = true
-        self.addSubview(button)
+//        self.addSubview(button)
         self.addSubview(container)
         self.addSubview(textLbl)
         container.addSubview(textView)
         container.addSubview(imgView)
         container.addSubview(thumbnailImgView)
         container.addSubview(highlightView)
+        self.addGestureRecognizer(rightSwipe)
+        self.addGestureRecognizer(leftSwipe)
         self.addGestureRecognizer(singleTap)
         self.addGestureRecognizer(doubleTap)
         self.addGestureRecognizer(panGesture)
         self.addGestureRecognizer(pinchGesture)
         
         self.cornerRadius = model.frame.height ==  zoomedHeight ? 48 : 12
-        if  model.frame.height ==  zoomedHeight {
+        if model.isZoomed { //model.frame.height ==  zoomedHeight {
+            self.removeGestureRecognizer(panGesture)
             self.superview?.bringSubviewToFront(self)
         }
         
@@ -231,7 +242,7 @@ class StoryCard: UIView {
     @objc func doubleTapToZoom(sender : UITapGestureRecognizer){
         
         if self.frame.height == normaHeight{
-            button.setTitle("Edit", for: .normal)
+//            button.setTitle("Edit", for: .normal)
             zoomIn(withAnimation: true)
         }
         else{
@@ -249,40 +260,47 @@ class StoryCard: UIView {
         }
     }
     
-    @objc func editText(){
-        if button.titleLabel?.text == "Edit"{
-            //textView.becomeFirstResponder()
-            highlightView.isHidden = true
-            textView.isEditable = true
-            button.setTitle("Done", for: .normal)
-            thumbnailImgView.isHidden = false
-        }
-        else if button.titleLabel?.text == "Done" {
-            highlightView.isHidden = false
-            textView.resignFirstResponder()
-            textView.isEditable = false
-            textLbl.sizeToFit()
-            button.setTitle("Edit", for: .normal)
-            thumbnailImgView.isHidden = true
-            
-        }
-        
-        
-        UIView.transition(with: self, duration: 1, options: [.transitionFlipFromRight , .showHideTransitionViews]) {
-            if self.imgView.alpha == 0{
-                self.imgView.alpha = 1
-                self.textView.alpha = 0
+    @objc func swipeMade(gesture: UISwipeGestureRecognizer) {
+        // to prevent swiping only when card is zoomed
+        if model.isZoomed {
+            // show back and open text view
+            if gesture.direction == .left && !(self.showingBack) {
+                print("BACK MODE")
+                self.highlightView.isHidden = true
+                self.textView.isEditable = true
+                self.thumbnailImgView.isHidden = false // bottom left thumbnail view below text view
+                self.showingBack = true // to prevent continous swiping in same direction
+                
+                UIView.transition(with: self, duration: 1, options: [.transitionFlipFromRight, .showHideTransitionViews]) {
+                    self.textView.alpha = 1
+                    self.imgView.alpha = 0
+                } completion: { status in
+                    if self.initialText != self.textView.text {
+                        self.model.isZoomed = true
+                        self.model.text = self.textView.text
+                    }
+                }
                 
             }
-            else{
-                self.textView.alpha = 1
-                self.imgView.alpha = 0
+            // show front and open image view, hide text view and thumbnail
+            else if gesture.direction == .right && self.showingBack {
+                print("FRONT MODE")
+                self.highlightView.isHidden = false
+                self.textView.isEditable = false
+                self.textView.resignFirstResponder()
+                self.thumbnailImgView.isHidden = true
+                self.showingBack = false
+                self.textLbl.sizeToFit()
                 
-            }
-        } completion: { status in
-            if self.initialText != self.textView.text {
-                self.model.isZoomed = true
-                self.model.text = self.textView.text
+                UIView.transition(with: self, duration: 1, options: [.transitionFlipFromLeft, .showHideTransitionViews]) {
+                    self.textView.alpha = 0
+                    self.imgView.alpha = 1
+                } completion: { status in
+                    if self.initialText != self.textView.text {
+                        self.model.isZoomed = true
+                        self.model.text = self.textView.text
+                    }
+                }
             }
         }
     }
@@ -291,7 +309,7 @@ class StoryCard: UIView {
         
         self.superview?.bringSubviewToFront(self)
 //        textLbl.alpha = 0
-        button.alpha = 1
+//        button.alpha = 1
         thumbnailImgView.alpha = 1
         
         let newX = (self.superview!.frame.width / 2) - (zoomedWidth / 2) + 25
@@ -317,11 +335,11 @@ class StoryCard: UIView {
     
     func zoomOut(){
         
-        if button.titleLabel?.text == "Done" {
-            return
-        }
+//        if button.titleLabel?.text == "Done" {
+//            return
+//        }
         
-        button.alpha =  0
+//        button.alpha =  0
         thumbnailImgView.alpha = 0
         UIView.animate(withDuration: 1) { [self] in
             self.frame = CGRect(x: initialX, y: initialY, width: normalWidth, height: normaHeight)
@@ -339,9 +357,9 @@ class StoryCard: UIView {
         let newX = floor(self.frame.midX / normalWidth) * normalWidth
         let newY = floor(self.frame.midY / normaHeight) * normaHeight
         UIView.animate(withDuration: 0.5) {
-            self.frame = CGRect(x: newX, y: newY, width: self.frame.width, height: self.frame.height)
+            self.frame = CGRect(x: newX, y: newY, width: self.normalWidth, height: self.normaHeight)
         } completion: { status in
-            self.model.frame = CGRect(x: newX, y: newY, width: self.frame.width, height: self.frame.height)
+            self.model.frame = CGRect(x: newX, y: newY, width: self.normalWidth, height: self.normaHeight)
         }
         
         
@@ -382,7 +400,6 @@ extension UIView: UIContextMenuInteractionDelegate {
             UIAction(title: NSLocalizedString("Return to Card Tray", comment: ""), image: UIImage(systemName: "plus.square.on.square")) { action in
                 if let storyView = self.superview as? StoryCard {
                     storyView.animateToCardTray()
-//                    storyView.cardReturned?(storyView.model.id, storyView.model.imageName)
                 }
 
             }
