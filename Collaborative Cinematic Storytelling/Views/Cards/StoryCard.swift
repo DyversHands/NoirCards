@@ -98,7 +98,7 @@ class StoryCard: UIView {
         container.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor , right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 50 , paddingRight: 50)
         imgView.addConstraintsToFillView(container)
 //        textView.addConstraintsToFillView(container)
-        textView.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: container.bottomAnchor, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
+        textView.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: thumbnailImgView.topAnchor, right: container.rightAnchor, paddingTop: 30, paddingLeft: 30, paddingBottom: 0, paddingRight: 30)
 //        textView.anchor(top: container.topAnchor, left: container.leftAnchor, paddingTop: 20, paddingLeft: 20)
         textLbl.anchor(top: container.bottomAnchor, left: container.leftAnchor, bottom: bottomAnchor, right: container.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8, height: 34)
 //        button.anchor(top: container.topAnchor, left: container.rightAnchor,  paddingTop: 8, paddingLeft: 8)
@@ -118,9 +118,9 @@ class StoryCard: UIView {
         
         self.backgroundColor = .clear
         
-        textLbl.numberOfLines = 0
+        textLbl.numberOfLines = model.isZoomed ? 2 : 1
         textLbl.attributedText = CDMarkdownParser().parse(model.text)
-        textLbl.font = UIFont.systemFont(ofSize: 16)
+        textLbl.font = UIFont.systemFont(ofSize: model.isZoomed ? 24 : 16)
         initialText = model.text
         
         imgView.image = model.image
@@ -135,7 +135,7 @@ class StoryCard: UIView {
         textView.isSelectable = false
         textView.alpha = 0
         textView.isEditable = true
-        textView.contentInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
+        textView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         textView.font = UIFont.systemFont(ofSize: 60)
         textView.text = model.text
         
@@ -307,25 +307,29 @@ class StoryCard: UIView {
     
     func zoomIn(withAnimation isAnimated: Bool) {
         
-        self.superview?.bringSubviewToFront(self)
 //        textLbl.alpha = 0
 //        button.alpha = 1
-        thumbnailImgView.alpha = 1
         
         let newX = (self.superview!.frame.width / 2) - (zoomedWidth / 2) + 25
-        var newY = (self.superview!.frame.height / 2) - (zoomedHeight / 2)
+        var newY = (self.superview!.frame.height / 2) - (zoomedHeight / 2) - 25
         newY = newY < 0 ? 0 : newY
         if isAnimated && isCardZoomed == false {
+            thumbnailImgView.alpha = 1
+            self.superview?.bringSubviewToFront(self)
+
             UIView.animate(withDuration: 1) { [self] in
                 self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
                 self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
                 self.cornerRadius = 48
+                self.textLbl.font = UIFont.systemFont(ofSize: 24)
             } completion: { status in
                 self.cornerRadius = 48
                 self.model.isZoomed = true
             }
         }
         else if model.isZoomed {
+            thumbnailImgView.alpha = 1
+            self.superview?.bringSubviewToFront(self)
             self.frame = CGRect(x: newX, y: newY, width: zoomedWidth, height: zoomedHeight)
             self.updateHeightWidht(newHeight: zoomedHeight, newWidth: zoomedWidth)
             self.cornerRadius = 48
@@ -334,6 +338,10 @@ class StoryCard: UIView {
     }
     
     func zoomOut(){
+        // not zoom out when in editing mode ( back of the card )
+        if showingBack {
+            return
+        }
         
 //        if button.titleLabel?.text == "Done" {
 //            return
