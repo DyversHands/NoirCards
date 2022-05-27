@@ -71,7 +71,9 @@ struct TopCardsView : View{
                     EmptyCard()
                     EmptyCard()
                     EmptyCard()
-                    EmptyCard()
+                    EmptyCard(shouldShowPlus: viewModel.stackImages.count < 7) {
+                        viewModel.pickRandomImage()
+                    }
                 }
                 
                 LazyHStack (spacing : 16) {
@@ -83,17 +85,7 @@ struct TopCardsView : View{
                     }
                 }
             }
-            
-            Button {
-                viewModel.pickRandomImage()
-            } label: {
-                Image(systemName: "plus")
-                    .resizable()
-                    .frame(width: 50, height: 50, alignment: .center)
-            }
-            .disabled(viewModel.stackImages.count == 7)
-            .frame(width: 80, height: 50, alignment: .center)
-            
+            .frame(width: UIScreen.main.bounds.width)
         }
         .padding(.vertical,5)
         .frame(width: UIScreen.main.bounds.width, height: 120, alignment: .top)

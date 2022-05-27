@@ -7,14 +7,33 @@
 
 import SwiftUI
 
-struct EmptyCard : View{
-    var body: some View{
-        HStack{
+struct EmptyCard : View {
+    
+    var shouldShowPlus = false
+    
+    var didPressedAdd: (() -> Void)? = nil
+    
+    var body: some View {
+        
+        ZStack{
+            
             RoundedRectangle(cornerRadius: 12, style: .circular)
                 .strokeBorder(.gray)
                 .foregroundColor(.clear)
                 .background(Color.clear)
-                .frame(width: cardWidth - 10, height: cardHeight)
+                .frame(width: cardWidth, height: cardHeight)
+            
+            
+            if shouldShowPlus {
+                Button {
+                    didPressedAdd?()
+                } label: {
+                    Image(systemName: "plus")
+                        .resizable()
+                        .frame(width: 50, height: 50, alignment: .center)
+                }
+                .frame(width: 80, height: 50, alignment: .center)
+            }
         }
     }
 }

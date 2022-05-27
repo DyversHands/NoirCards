@@ -24,7 +24,7 @@ struct TopStoryCard : View{
                 Image(uiImage: image)
                     .resizable()
                     .cornerRadius(12)
-                    .frame(width: cardWidth - 10, height: cardHeight)
+                    .frame(width: cardWidth, height: cardHeight)
             }
         }
         .contextMenu {
