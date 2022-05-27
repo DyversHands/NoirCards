@@ -377,7 +377,7 @@ class StoryCard: UIView {
         if storyViewModel.stackImages.count < 7 {
             var newX = 15.0
             for _ in storyViewModel.stackImages {
-                newX += (cardWidth * 1.11)
+                newX += (cardWidth + 16)//* 1.11)
             }
             UIView.animate(withDuration: 1) { [self] in
                 self.frame = CGRect(x: newX, y: -(cardHeight * 1.51), width: normalWidth, height: normaHeight)
