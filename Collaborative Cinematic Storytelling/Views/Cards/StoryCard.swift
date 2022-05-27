@@ -375,12 +375,12 @@ class StoryCard: UIView {
     
     func animateToCardTray() {
         if storyViewModel.stackImages.count < 7 {
-            var newX = 6.0
+            var newX = 15.0
             for _ in storyViewModel.stackImages {
-                newX += (cardWidth * 1.0424)
+                newX += (cardWidth * 1.11)
             }
             UIView.animate(withDuration: 1) { [self] in
-                self.frame = CGRect(x: newX, y: -(cardHeight * 1.51), width: normalWidth - 10, height: normaHeight)
+                self.frame = CGRect(x: newX, y: -(cardHeight * 1.51), width: normalWidth, height: normaHeight)
             } completion: { completed in
                 self.cardReturned?(self.model.id, self.model.imageName)
             }
