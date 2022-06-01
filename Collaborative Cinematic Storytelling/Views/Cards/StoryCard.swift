@@ -207,9 +207,7 @@ class StoryCard: UIView {
                 print("translated Point",frame.minX  , frame.minY)
                 
                 if sender.state == .ended {
-                    // grid calculation
-                    alignToGrid()
-                    //self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
+                    self.model.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height)
                     self.bringSubviewToFront(self)
                 }
             }
