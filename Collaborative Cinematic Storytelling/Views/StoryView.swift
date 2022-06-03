@@ -18,32 +18,31 @@ struct StoryView: View {
         
         HStack{
             Spacer(minLength: 8)
-            VStack(spacing: 0){
-                HStack{
+            
+            VStack(spacing: 0) {
+                
+                HStack {
+                    
                     Spacer(minLength: 20)
+                    
                     Text("Freeform Story").font(Font.system(.headline, design: .default))
                         .frame(height: 30)
+                    
                     Spacer(minLength: 20)
-                    /*
-                    Button {
-                        viewModel.pickRandomImage()
-                    } label: {
-                        Image(systemName: "camera.metering.spot")
-                    }
-                     */
                     
                 }
                 
                 TopCardsView(viewModel: viewModel)
+                
                 Color.black.frame(height: 3).padding(.vertical,20)
-                DropView(viewModel: viewModel)
-                    .onDrop(of: [imageType], delegate:  MyDropDelegate(dropImages: $viewModel.droppedImages, stackImages: $viewModel.stackImages))
-//                Spacer(minLength: 100)
+                
+                ZoomableScrollView {
+                    DropView(viewModel: viewModel)
+                        .onDrop(of: [imageType], delegate:  MyDropDelegate(dropImages: $viewModel.droppedImages, stackImages: $viewModel.stackImages))
+                }
             }
+            
             Spacer(minLength: 8)
-        }
-        .onAppear {
-            //CoreDataManager.shared.deleteAllData(placement: Placement.dropped.rawValue)
         }
     }
 }
@@ -95,8 +94,9 @@ struct TopCardsView : View{
 }
 
 struct DropView: UIViewRepresentable {
-    //var newImage: StoryModel?
+    
     @ObservedObject var viewModel: StoryViewModel
+    
     func makeUIView(context: Context) -> UIView {
         UIView()
     }
@@ -108,13 +108,10 @@ struct DropView: UIViewRepresentable {
         for image in viewModel.droppedImages{
             let storyV = StoryCard(model:image, storyViewModel: viewModel, frame: image.frame)
             storyV.viewUpdated = { storyModel in
-                if let index = viewModel.droppedImages.firstIndex(where: {$0.id
-                    == storyModel.id }){
-                    viewModel.droppedImages.removeAll(where: {$0.id == storyModel.id})
-                    viewModel.droppedImages.append(storyModel)
-//                    viewModel.droppedImages[index] = storyModel
-                }
+                viewModel.droppedImages.removeAll(where: {$0.id == storyModel.id})
+                viewModel.droppedImages.append(storyModel)
             }
+            
             storyV.cardReturned = { (cardID, imgName) in
                 viewModel.droppedImages.removeAll(where: {$0.id == cardID})
                 viewModel.pickImageFromID(imgName: imgName)
@@ -128,6 +125,7 @@ struct DropView: UIViewRepresentable {
         }
     }
 }
+
 
 struct MyDropDelegate: DropDelegate {
     @Binding var dropImages : [StoryModel]
@@ -146,7 +144,7 @@ struct MyDropDelegate: DropDelegate {
                                 width: cardWidth + 50,
                                 height: cardHeight + 50)
                             print("location" + "\(info.location)")
-
+                            
                             dropImages.append(StoryModel(imageName: imgName, frame: cardFrame))
                         }
                     }
@@ -155,6 +153,4 @@ struct MyDropDelegate: DropDelegate {
         }
         return true
     }
-    
-    
 }

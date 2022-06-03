@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		180B0D2E28493542003C553A /* ZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180B0D2D28493542003C553A /* ZoomableScrollView.swift */; };
 		7E6C6A25C0A0D96A2DEC5308 /* Pods_Collaborative_Cinematic_Storytelling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41494CE18ABEC233014B09C7 /* Pods_Collaborative_Cinematic_Storytelling.framework */; };
 		AB06F0042827ACB2005610FE /* Core Data Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB06F0032827ACB2005610FE /* Core Data Manager.swift */; };
 		AB06F00828284967005610FE /* CDMarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = AB06F00728284967005610FE /* CDMarkdownKit */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		180B0D2D28493542003C553A /* ZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableScrollView.swift; sourceTree = "<group>"; };
 		2E162F75342DF60A6D0FAD2C /* Pods-Collaborative Cinematic Storytelling.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Collaborative Cinematic Storytelling.release.xcconfig"; path = "Target Support Files/Pods-Collaborative Cinematic Storytelling/Pods-Collaborative Cinematic Storytelling.release.xcconfig"; sourceTree = "<group>"; };
 		41494CE18ABEC233014B09C7 /* Pods_Collaborative_Cinematic_Storytelling.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Collaborative_Cinematic_Storytelling.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		792EB6AD78190D8D3C60DB5A /* Pods-Collaborative Cinematic Storytelling.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Collaborative Cinematic Storytelling.debug.xcconfig"; path = "Target Support Files/Pods-Collaborative Cinematic Storytelling/Pods-Collaborative Cinematic Storytelling.debug.xcconfig"; sourceTree = "<group>"; };
@@ -73,7 +75,6 @@
 				792EB6AD78190D8D3C60DB5A /* Pods-Collaborative Cinematic Storytelling.debug.xcconfig */,
 				2E162F75342DF60A6D0FAD2C /* Pods-Collaborative Cinematic Storytelling.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -141,6 +142,7 @@
 				AB851F072822D25200958D24 /* Cards */,
 				AB5506112817B24400E6CCB4 /* ContentView.swift */,
 				AB5506222817B29800E6CCB4 /* StoryView.swift */,
+				180B0D2D28493542003C553A /* ZoomableScrollView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -230,7 +232,7 @@
 			);
 			mainGroup = AB5506032817B24400E6CCB4;
 			packageReferences = (
-				AB06F00628284967005610FE /* XCRemoteSwiftPackageReference "CDMarkdownKit.git" */,
+				AB06F00628284967005610FE /* XCRemoteSwiftPackageReference "CDMarkdownKit" */,
 			);
 			productRefGroup = AB55060D2817B24400E6CCB4 /* Products */;
 			projectDirPath = "";
@@ -306,6 +308,7 @@
 				AB12060E28221B4900990332 /* StoryViewModel.swift in Sources */,
 				AB5506232817B29800E6CCB4 /* StoryView.swift in Sources */,
 				AB851F0E2822D2B700958D24 /* StoryCard.swift in Sources */,
+				180B0D2E28493542003C553A /* ZoomableScrollView.swift in Sources */,
 				AB06F0042827ACB2005610FE /* Core Data Manager.swift in Sources */,
 				AB851F0B2822D2A100958D24 /* Empty Card.swift in Sources */,
 				AB5506122817B24400E6CCB4 /* ContentView.swift in Sources */,
@@ -518,7 +521,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AB06F00628284967005610FE /* XCRemoteSwiftPackageReference "CDMarkdownKit.git" */ = {
+		AB06F00628284967005610FE /* XCRemoteSwiftPackageReference "CDMarkdownKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/chrisdhaan/CDMarkdownKit.git";
 			requirement = {
@@ -531,7 +534,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		AB06F00728284967005610FE /* CDMarkdownKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AB06F00628284967005610FE /* XCRemoteSwiftPackageReference "CDMarkdownKit.git" */;
+			package = AB06F00628284967005610FE /* XCRemoteSwiftPackageReference "CDMarkdownKit" */;
 			productName = CDMarkdownKit;
 		};
 /* End XCSwiftPackageProductDependency section */
