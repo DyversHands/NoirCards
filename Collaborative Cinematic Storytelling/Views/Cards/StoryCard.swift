@@ -404,16 +404,21 @@ class StoryCard: UIView {
         }
         /// if view is below center view, finding X Respectively
         else if frame.minY > centerY + 25 {
+            if centerY + (cardHeight * 2) < self.superview!.frame.height { // for bigger ipads there can be 2 rows below center
+                newY = frame.minY > centerY + (cardHeight * 2) ? centerY + (normaHeight * 2) : centerY + normaHeight
+            }
+            else {
+                newY = centerY + normaHeight
+            }
             // first Checking if center is empty, else aligning left or right
-            if cardFrames.contains(where: {$0.y == centerY + normaHeight && $0.x == centerX}) {
-                while cardFrames.contains(where: {$0.y == centerY + normaHeight && $0.x == newX}) {
+            if cardFrames.contains(where: {$0.y == newY && $0.x == centerX}) {
+                while cardFrames.contains(where: {$0.y == newY && $0.x == newX}) {
                     findXToAlign()
                     if newX == 0 || newX == (self.superview!.frame.maxX - normalWidth) {
                         break
                     }
                 }
             }
-            newY = centerY + normaHeight
             animateFrame()
         }
         
