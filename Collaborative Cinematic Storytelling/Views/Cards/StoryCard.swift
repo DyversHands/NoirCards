@@ -385,24 +385,21 @@ class StoryCard: UIView {
         /// if view is above center view, finding X Respectively
         else if frame.minY < centerY - 25 {
             //first Checking if center is empty, else aligning left or right
-            if cardFrames.contains(where: {$0.y == centerY - normaHeight && $0.x == centerX}) {
-                while cardFrames.contains(where: {$0.y == centerY - normaHeight && $0.x == newX}) {
+            if centerY - (cardHeight * 2) > 0 { // for bigger ipads there can be 2 rows above center
+                newY = frame.minY < (centerY - normaHeight - 50) ? 10 : centerY - normaHeight
+            }
+            else {
+                newY = centerY - normaHeight
+            }
+
+            if cardFrames.contains(where: {$0.y == newY && $0.x == centerX}) {
+                while cardFrames.contains(where: {$0.y == newY && $0.x == newX}) {
                     findXToAlign()
                     if newX == 0 || newX == (self.superview!.frame.maxX - normalWidth) {
                         break
                     }
                 }
-                
             }
-            if centerY - (cardHeight * 2) > 0 { // for bigger ipads there can be 2 rows above center
-                if frame.minY < (centerY - normaHeight - 50) {
-                    newY = 10
-                }
-                else {
-                    newY = centerY - normaHeight
-                }
-            }
-//            newY = centerY - normaHeight
             animateFrame()
         }
         /// if view is below center view, finding X Respectively
@@ -416,7 +413,6 @@ class StoryCard: UIView {
                     }
                 }
             }
-            
             newY = centerY + normaHeight
             animateFrame()
         }
