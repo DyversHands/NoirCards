@@ -25,7 +25,8 @@ struct StoryView: View {
                     
                     Spacer(minLength: 20)
                     
-                    Text("Freeform Story").font(Font.system(.headline, design: .default))
+                    Text("Freeform Story")
+                        .font(Font.system(.headline, design: .default))
                         .frame(height: 30)
                     
                     Spacer(minLength: 20)
