@@ -1,0 +1,16 @@
+PODS:
+  - Marklight (1.4.0)
+
+DEPENDENCIES:
+  - Marklight
+
+SPEC REPOS:
+  trunk:
+    - Marklight
+
+SPEC CHECKSUMS:
+  Marklight: 2489d376cd3d3e7b1d109cd7d6d248fd9b8e0bee
+
+PODFILE CHECKSUM: 237f4032810f4e82ebd1d890f7b48b4d39ad3cb2
+
+COCOAPODS: 1.11.3
