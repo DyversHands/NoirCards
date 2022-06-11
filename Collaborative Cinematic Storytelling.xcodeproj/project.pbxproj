@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		180B0D2E28493542003C553A /* ZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180B0D2D28493542003C553A /* ZoomableScrollView.swift */; };
 		18ABB896284B3BA8002B4C8A /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = 18ABB895284B3BA8002B4C8A /* MarkdownKit */; };
-		7E6C6A25C0A0D96A2DEC5308 /* Pods_Collaborative_Cinematic_Storytelling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41494CE18ABEC233014B09C7 /* Pods_Collaborative_Cinematic_Storytelling.framework */; };
 		AB06F0042827ACB2005610FE /* Core Data Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB06F0032827ACB2005610FE /* Core Data Manager.swift */; };
 		AB06F00B28284B50005610FE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB06F00A28284B50005610FE /* Extensions.swift */; };
 		AB06F00D28286295005610FE /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB06F00C28286295005610FE /* View.xib */; };
@@ -28,9 +27,6 @@
 
 /* Begin PBXFileReference section */
 		180B0D2D28493542003C553A /* ZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableScrollView.swift; sourceTree = "<group>"; };
-		2E162F75342DF60A6D0FAD2C /* Pods-Collaborative Cinematic Storytelling.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Collaborative Cinematic Storytelling.release.xcconfig"; path = "Target Support Files/Pods-Collaborative Cinematic Storytelling/Pods-Collaborative Cinematic Storytelling.release.xcconfig"; sourceTree = "<group>"; };
-		41494CE18ABEC233014B09C7 /* Pods_Collaborative_Cinematic_Storytelling.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Collaborative_Cinematic_Storytelling.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		792EB6AD78190D8D3C60DB5A /* Pods-Collaborative Cinematic Storytelling.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Collaborative Cinematic Storytelling.debug.xcconfig"; path = "Target Support Files/Pods-Collaborative Cinematic Storytelling/Pods-Collaborative Cinematic Storytelling.debug.xcconfig"; sourceTree = "<group>"; };
 		AB06F0032827ACB2005610FE /* Core Data Manager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Core Data Manager.swift"; sourceTree = "<group>"; };
 		AB06F00A28284B50005610FE /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		AB06F00C28286295005610FE /* View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
@@ -54,26 +50,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				18ABB896284B3BA8002B4C8A /* MarkdownKit in Frameworks */,
-				7E6C6A25C0A0D96A2DEC5308 /* Pods_Collaborative_Cinematic_Storytelling.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		62D0A9C33FCE2470B3CFB02E /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				41494CE18ABEC233014B09C7 /* Pods_Collaborative_Cinematic_Storytelling.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		8BE984E9FAF762EFA09DB94C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				792EB6AD78190D8D3C60DB5A /* Pods-Collaborative Cinematic Storytelling.debug.xcconfig */,
-				2E162F75342DF60A6D0FAD2C /* Pods-Collaborative Cinematic Storytelling.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -100,7 +85,6 @@
 				AB55060E2817B24400E6CCB4 /* Collaborative Cinematic Storytelling */,
 				AB55060D2817B24400E6CCB4 /* Products */,
 				8BE984E9FAF762EFA09DB94C /* Pods */,
-				62D0A9C33FCE2470B3CFB02E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -189,11 +173,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AB55061F2817B24500E6CCB4 /* Build configuration list for PBXNativeTarget "Collaborative Cinematic Storytelling" */;
 			buildPhases = (
-				DEFC49E79C39CD7C202C762B /* [CP] Check Pods Manifest.lock */,
 				AB5506082817B24400E6CCB4 /* Sources */,
 				AB5506092817B24400E6CCB4 /* Frameworks */,
 				AB55060A2817B24400E6CCB4 /* Resources */,
-				5660797E6C8D085095A495DD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -232,7 +214,7 @@
 			);
 			mainGroup = AB5506032817B24400E6CCB4;
 			packageReferences = (
-				18ABB894284B3BA8002B4C8A /* XCRemoteSwiftPackageReference "MarkdownKit" */,
+				18ABB894284B3BA8002B4C8A /* XCRemoteSwiftPackageReference "MarkdownKit.git" */,
 			);
 			productRefGroup = AB55060D2817B24400E6CCB4 /* Products */;
 			projectDirPath = "";
@@ -255,48 +237,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		5660797E6C8D085095A495DD /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Collaborative Cinematic Storytelling/Pods-Collaborative Cinematic Storytelling-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Collaborative Cinematic Storytelling/Pods-Collaborative Cinematic Storytelling-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Collaborative Cinematic Storytelling/Pods-Collaborative Cinematic Storytelling-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DEFC49E79C39CD7C202C762B /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Collaborative Cinematic Storytelling-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AB5506082817B24400E6CCB4 /* Sources */ = {
@@ -437,7 +377,6 @@
 		};
 		AB5506202817B24500E6CCB4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 792EB6AD78190D8D3C60DB5A /* Pods-Collaborative Cinematic Storytelling.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -468,7 +407,6 @@
 		};
 		AB5506212817B24500E6CCB4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E162F75342DF60A6D0FAD2C /* Pods-Collaborative Cinematic Storytelling.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -521,7 +459,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		18ABB894284B3BA8002B4C8A /* XCRemoteSwiftPackageReference "MarkdownKit" */ = {
+		18ABB894284B3BA8002B4C8A /* XCRemoteSwiftPackageReference "MarkdownKit.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bmoliveira/MarkdownKit.git";
 			requirement = {
@@ -534,7 +472,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		18ABB895284B3BA8002B4C8A /* MarkdownKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 18ABB894284B3BA8002B4C8A /* XCRemoteSwiftPackageReference "MarkdownKit" */;
+			package = 18ABB894284B3BA8002B4C8A /* XCRemoteSwiftPackageReference "MarkdownKit.git" */;
 			productName = MarkdownKit;
 		};
 /* End XCSwiftPackageProductDependency section */

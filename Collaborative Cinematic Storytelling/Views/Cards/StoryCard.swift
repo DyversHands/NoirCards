@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import SwiftUI
-import CDMarkdownKit
 import MarkdownKit
 
 class StoryCard: UIView {

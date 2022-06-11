@@ -1,6 +1,0 @@
-framework module Pods_Collaborative_Cinematic_Storytelling {
-  umbrella header "Pods-Collaborative Cinematic Storytelling-umbrella.h"
-
-  export *
-  module * { export * }
-}
