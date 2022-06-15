@@ -34,13 +34,15 @@ struct StoryView: View {
                 }
                 
                 TopCardsView(viewModel: viewModel)
+                Spacer(minLength: 20)
                 
-                Color.black.frame(height: 3).padding(.vertical,20)
+                Color.black.frame(height: 3)//.padding(.vertical,20)
                 
                 ZoomableScrollView {
                     DropView(viewModel: viewModel)
                         .onDrop(of: [imageType], delegate:  MyDropDelegate(dropImages: $viewModel.droppedImages, stackImages: $viewModel.stackImages))
                 }
+                .frame(width: UIScreen.main.bounds.width)
             }
             
             Spacer(minLength: 8)
@@ -138,13 +140,15 @@ struct MyDropDelegate: DropDelegate {
                     if let imgData = data as? Data {
                         if let imgName = String(data: imgData, encoding: .utf8) {
                             stackImages.removeAll(where: {$0.imageName == imgName})
-                            
+                            let newX = info.location.x - cardWidth/2
+                            let newY = info.location.y - cardHeight/2
                             let cardFrame = CGRect(
-                                x: info.location.x - (cardWidth / 2),
-                                y: info.location.y - (cardHeight / 2),   ///2) + (cardHeight/2) + 50, //info.location.y - (cardHeight / 2),
+                                x: newX < 0 ? 0 : newX,
+                                y: newY < 0 ? 0 : newY ,   ///2) + (cardHeight/2) + 50, //info.location.y - (cardHeight / 2),
                                 width: cardWidth + 50,
                                 height: cardHeight + 50)
-                            print("location" + "\(info.location)")
+                            
+                            print("location 1",info.location, cardFrame)
                             
                             dropImages.append(StoryModel(imageName: imgName, frame: cardFrame))
                         }
