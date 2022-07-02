@@ -95,7 +95,9 @@ class StoryCard: UIView {
             return
         }
         //self.anchor(top: self.superview!.topAnchor, left: self.superview!.leftAnchor,  paddingTop: model.frame.minY, paddingLeft: model.frame.minX, width: model.frame.width, height: model.frame.height)
-        container.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor , right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 50 , paddingRight: 50)
+        let paddingBottom: CGFloat = self.model.text == "" ? 0 : 50
+
+        container.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor , right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: paddingBottom , paddingRight: 0)
         imgView.addConstraintsToFillView(container)
 //        textView.addConstraintsToFillView(container)
         textView.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: thumbnailImgView.topAnchor, right: container.rightAnchor, paddingTop: 30, paddingLeft: 30, paddingBottom: 0, paddingRight: 30)
@@ -239,7 +241,7 @@ class StoryCard: UIView {
     
     @objc func doubleTapToZoom(sender : UITapGestureRecognizer){
         
-        if self.frame.height == normaHeight{
+        if self.frame.height == normaHeight || self.frame.height == cardHeight { // both text cards and empty cards can be zoomed
 //            button.setTitle("Edit", for: .normal)
             zoomIn(withAnimation: true)
         }
@@ -297,6 +299,9 @@ class StoryCard: UIView {
                     if self.initialText != self.textView.text {
                         self.model.isZoomed = true
                         self.model.text = self.textView.text
+                        // updating height in model frame if text is added
+                        let height = self.model.text == "" ? cardHeight : self.normaHeight
+                        self.model.frame = CGRect(x: self.model.frame.minX, y: self.model.frame.minY, width: cardWidth, height: height)
                     }
                 }
             }
@@ -347,9 +352,10 @@ class StoryCard: UIView {
         
 //        button.alpha =  0
         thumbnailImgView.alpha = 0
+        let height = self.model.text == "" ? cardHeight : normaHeight
         UIView.animate(withDuration: 1) { [self] in
-            self.frame = CGRect(x: initialX, y: initialY, width: normalWidth, height: normaHeight)
-            self.updateHeightWidht(newHeight: normaHeight, newWidth: normalWidth)
+            self.frame = CGRect(x: initialX, y: initialY, width: cardWidth, height: height)
+            self.updateHeightWidht(newHeight: height, newWidth: cardWidth)
             self.cornerRadius = 12
             self.textLbl.font = UIFont.systemFont(ofSize: 16)
             
@@ -364,13 +370,17 @@ class StoryCard: UIView {
         
         let centerX = (self.superview!.frame.width / 2) - (normalWidth / 2) + 25
         let centerY = (self.superview!.frame.height / 2) - (normaHeight / 2) + 25
-        
-        let cardFrames = storyViewModel.droppedImages.compactMap({$0.frame.origin}) // all origins of cards
+        let cardFrames = storyViewModel.droppedImages.map({$0.frame.origin}) // all origins of cards
         
         var newX = centerX
         var newY = centerY
         
-        /// if view is vertically center, we have to find x Axis respectively right or left
+        findY()
+        findX()
+        animateFrame()
+        
+        /// if view is vertically center, For Y Axis Parallel to center y
+        /*
         if frame.minY >= centerY - 25 && frame.minY <= centerY + 25 {
             while cardFrames.contains(where: { $0.y == centerY && $0.x == newX }) {
                 findXToAlign()
@@ -381,64 +391,66 @@ class StoryCard: UIView {
             animateFrame()
             
         }
-        /// if view is above center view, finding X Respectively
-        else if frame.minY < centerY - 25 {
-            //first Checking if center is empty, else aligning left or right
-            if centerY - (cardHeight * 2) > 0 { // for bigger ipads there can be 2 rows above center
-                newY = frame.minY < (centerY - normaHeight - 50) ? 10 : centerY - normaHeight
+         */
+        func findY() {
+            // Animate Above Center Card
+            if frame.minY < centerY {
+                let topY = centerY - cardHeight + 10
+                let isAtTop = frame.minY < 50
+                newY = isAtTop ? 10 : topY
             }
-            else {
-                newY = centerY - normaHeight
+            // Animate Below Center Card
+            else if frame.minY > centerY {
+                let bottomY = centerY + cardHeight - 10
+                let isBottom = frame.minY > centerY + (cardHeight * 2)
+                newY = isBottom ? centerY + (cardHeight * 2) + 20 : bottomY
             }
-
-            if cardFrames.contains(where: {$0.y == newY && $0.x == centerX}) {
-                while cardFrames.contains(where: {$0.y == newY && $0.x == newX}) {
-                    findXToAlign()
-                    if newX == 0 || newX == (self.superview!.frame.maxX - normalWidth) {
-                        break
-                    }
-                }
-            }
-            animateFrame()
-        }
-        /// if view is below center view, finding X Respectively
-        else if frame.minY > centerY + 25 {
-            if centerY + (cardHeight * 2) < self.superview!.frame.height { // for bigger ipads there can be 2 rows below center
-                newY = frame.minY > centerY + (cardHeight * 2) ? centerY + (normaHeight * 2) : centerY + normaHeight
-            }
-            else {
-                newY = centerY + normaHeight
-            }
-            // first Checking if center is empty, else aligning left or right
-            if cardFrames.contains(where: {$0.y == newY && $0.x == centerX}) {
-                while cardFrames.contains(where: {$0.y == newY && $0.x == newX}) {
-                    findXToAlign()
-                    if newX == 0 || newX == (self.superview!.frame.maxX - normalWidth) {
-                        break
-                    }
-                }
-            }
-            animateFrame()
+            roundValues()
         }
         
-        func findXToAlign() {
-            newX = frame.minX <  centerX ? (newX - normalWidth) : (newX + normalWidth)
-            if newX < self.superview!.frame.minX {
-                newX = 0
-            }
-            else if newX > self.superview!.frame.maxX {
-                newX = (self.superview!.frame.maxX - normalWidth)
+        func findX() {
+            let leftX = centerX - cardWidth + 20
+            let rightX = centerX + cardWidth - 20
+            
+            // move x to right or left
+            let isLeftToCenter = frame.minX < centerX
+            newX = isLeftToCenter ? leftX : rightX
+            
+            roundValues() // round values to zero to avoid false condition like 21.1 == 21.15 etc
+            
+            if cardFrames.contains(where: { $0.y.toRound() == newY.toRound() && $0.x.toRound() == newX.toRound()}) {
+                while cardFrames.contains(where: { $0.y.toRound() == newY.toRound() && $0.x.toRound() == newX.toRound()}) {
+                    newX = frame.minX < centerX ? (newX - normalWidth) : (newX + normalWidth)
+                    if newX <= 0 || newX >= (self.superview!.frame.maxX - normalWidth) {
+                        break
+                        
+                    }
+                }
             }
         }
         
         func animateFrame() {
+            roundValues()
+            let height = self.model.text == "" ? cardHeight : normaHeight
             UIView.animate(withDuration: 0.5) {
-                self.frame = CGRect(x: newX, y: newY, width: self.normalWidth, height: self.normaHeight)
+                self.frame = CGRect(x: newX, y: newY, width: cardWidth, height: height)
             } completion: { completed in
                 if completed {
-                    self.frame = CGRect(x: newX, y: newY, width: self.normalWidth, height: self.normaHeight)
+                    self.frame = CGRect(x: newX, y: newY, width: cardWidth, height: height)
                     self.model.frame = self.frame
+                    bringCenterCardToFront()
                 }
+            }
+        }
+        
+        func roundValues() {
+            newY = newY.toRound()
+            newX = newX.toRound()
+        }
+        
+        func bringCenterCardToFront() {
+            if let card = self.superview?.subviews.first(where: {($0.frame.minX == centerX && $0.frame.minY == centerY)}) as? StoryCard {
+                viewUpdated?(card.model)
             }
         }
     }
@@ -461,8 +473,9 @@ class StoryCard: UIView {
             calculateFrameAlignment()
         }
         else {
+            let height = self.model.text == "" ? cardHeight : normaHeight
             UIView.animate(withDuration: 0.5) {
-                self.frame = CGRect(x: centerX, y: centerY, width: self.normalWidth, height: self.normaHeight)
+                self.frame = CGRect(x: centerX, y: centerY, width: cardWidth, height: height)
             } completion: { status in
                 self.model.frame = self.frame
             }

@@ -122,3 +122,9 @@ extension UIView {
   }
   
 }
+extension CGFloat {
+    
+    func toRound() -> CGFloat {
+        return CGFloat(Int(self))
+    }
+}

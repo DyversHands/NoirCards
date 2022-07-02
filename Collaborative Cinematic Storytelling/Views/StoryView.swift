@@ -123,8 +123,10 @@ struct DropView: UIViewRepresentable {
             storyV.cardRemoved = { cardID in
                 viewModel.droppedImages.removeAll(where: {$0.id == cardID})
             }
+
             
             uiView.addSubview(storyV)
+            
         }
     }
 }
@@ -145,8 +147,8 @@ struct MyDropDelegate: DropDelegate {
                             let cardFrame = CGRect(
                                 x: newX < 0 ? 0 : newX,
                                 y: newY < 0 ? 0 : newY ,   ///2) + (cardHeight/2) + 50, //info.location.y - (cardHeight / 2),
-                                width: cardWidth + 50,
-                                height: cardHeight + 50)
+                                width: cardWidth,
+                                height: cardHeight)
                             
                             print("location 1",info.location, cardFrame)
                             
